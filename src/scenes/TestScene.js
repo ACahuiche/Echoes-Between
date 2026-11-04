@@ -32,6 +32,8 @@ export default class TestScene extends Phaser.Scene {
 
         this.player = new Player(this, 80, 180);
 
+        this.player.abilityManager.unlock('doubleJump');
+
         this.physics.add.collider(
             this.player.gameObject,
             ground

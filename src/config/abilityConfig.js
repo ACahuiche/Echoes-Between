@@ -28,5 +28,5 @@ export const ABILITY_CONFIG = {
 
 export const TEST_CONFIG = {
     enabled: true,
-    unlockAllAbilities: true
+    unlockAllAbilities: false
 };
