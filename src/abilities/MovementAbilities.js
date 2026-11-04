@@ -16,6 +16,46 @@ export default class MovementAbilities {
         this.isGliding = false;
 
         this.canWallJump = true;
+        this.isWallGrabbing = false;
+    }
+
+    handleWallGrab(direction) {
+
+        const body = this.player.body;
+
+        if (
+            !this.abilityManager.isUnlocked('wallJump') ||
+            body.onFloor() ||
+            this.isDashing
+        ) {
+            this.isWallGrabbing = false;
+            return false;
+        }
+
+        const touchingLeft =
+            body.blocked.left || body.touching.left;
+
+        const touchingRight =
+            body.blocked.right || body.touching.right;
+
+        const pressingTowardWall =
+            (touchingLeft && direction === -1) ||
+            (touchingRight && direction === 1);
+
+        this.isWallGrabbing =
+            this.canWallJump && pressingTowardWall;
+
+        if (!this.isWallGrabbing) {
+            return false;
+        }
+
+        const fallSpeed = ABILITY_CONFIG.wallJump.grabFallSpeed;
+
+        if (body.velocity.y > fallSpeed) {
+            body.setVelocityY(fallSpeed);
+        }
+
+        return true;
     }
 
     handleJump(jumpKey) {
@@ -67,6 +107,7 @@ export default class MovementAbilities {
 
             this.jumpCount = 1;
             this.canWallJump = false;
+            this.isWallGrabbing = false;
 
             return;
         }
@@ -105,6 +146,7 @@ export default class MovementAbilities {
         const config = ABILITY_CONFIG.dimensionalDash;
 
         this.isDashing = true;
+        this.isWallGrabbing = false;
 
         body.setAccelerationX(0);
         body.setDragX(0);

@@ -10,7 +10,8 @@ export const ABILITY_CONFIG = {
 
     wallJump: {
         horizontalForce: 250,
-        verticalForce: -400
+        verticalForce: -400,
+        grabFallSpeed: 80
     },
 
     aetherGlide: {
