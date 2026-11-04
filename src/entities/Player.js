@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 import AbilityManager from '../abilities/AbilityManager.js';
 import MovementAbilities from '../abilities/MovementAbilities.js';
 import DimensionalAbilities from '../abilities/DimensionalAbilities.js';
@@ -11,7 +9,12 @@ export default class Player {
         this.scene = scene;
 
         this.speed = 180;
+        this.acceleration = 1400;
+        this.friction = 1800;
         this.jumpForce = -400;
+
+        // Dirección: 1 = derecha, -1 = izquierda
+        this.facing = 1;
 
         this.gameObject = scene.add.rectangle(
             x,
@@ -26,6 +29,8 @@ export default class Player {
         this.body = this.gameObject.body;
 
         this.body.setCollideWorldBounds(true);
+        this.body.setMaxVelocity(this.speed, 1000);
+        this.body.setDragX(this.friction);
 
         this.abilityManager = new AbilityManager();
 
@@ -53,21 +58,41 @@ export default class Player {
 
     update() {
 
-        const body = this.body;
-
-        body.setVelocityX(0);
-
-        if (this.cursors.left.isDown || this.keys.a.isDown) {
-
-            body.setVelocityX(-this.speed);
-        }
-
-        if (this.cursors.right.isDown || this.keys.d.isDown) {
-
-            body.setVelocityX(this.speed);
-        }
+        this.handleMovement();
 
         this.movementAbilities.handleJump(this.cursors.space);
+
+    }
+
+    handleMovement() {
+
+        const body = this.body;
+
+        let direction = 0;
+
+        const movingLeft =
+            this.cursors.left.isDown || this.keys.a.isDown;
+
+        const movingRight =
+            this.cursors.right.isDown || this.keys.d.isDown;
+
+        if (movingLeft && !movingRight) {
+            direction = -1;
+        }
+
+        if (movingRight && !movingLeft) {
+            direction = 1;
+        }
+
+        if (direction !== 0) {
+            this.facing = direction;
+        }
+
+        body.setAccelerationX(
+            direction * this.acceleration
+        );
+
+        body.setMaxVelocity(this.speed, 1000);
 
     }
 
