@@ -72,20 +72,27 @@ export default class MovementAbilities {
         this.dashTimer = this.player.scene.time.delayedCall(
             config.duration,
             () => {
-
+        
                 this.isDashing = false;
-
+        
                 body.setVelocityX(0);
-
+        
                 body.setDragX(this.player.friction);
-
+        
                 body.setMaxVelocity(
                     this.player.speed,
                     1000
                 );
-
+        
+                const barriers =
+                    this.player.scene.dimensionalBarriers || [];
+        
+                barriers.forEach(barrier => {
+                    barrier.resolvePlayerAfterDash();
+                });
+        
                 this.dashTimer = null;
-
+        
             }
         );
 

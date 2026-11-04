@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
+
 import Player from '../entities/Player.js';
+import DimensionalBarrier from '../objects/DimensionalBarrier.js';
 
 export default class TestScene extends Phaser.Scene {
 
@@ -32,12 +34,21 @@ export default class TestScene extends Phaser.Scene {
 
         this.player = new Player(this, 80, 180);
 
-        this.player.abilityManager.unlock('doubleJump');
         this.player.abilityManager.unlock('dimensionalDash');
+
 
         this.physics.add.collider(
             this.player.gameObject,
             ground
+        );
+
+        this.barrier = new DimensionalBarrier(
+            this,
+            this.player,
+            220,
+            180,
+            16,
+            100
         );
 
         console.log(
