@@ -57,11 +57,17 @@ export default class Player {
     }
 
     update() {
+        this.movementAbilities.handleDash(this.keys.dash);
 
-        this.handleMovement();
+        // Mientras dura el Dash, bloqueamos el movimiento normal
+        if (!this.movementAbilities.isDashing) {
 
-        this.movementAbilities.handleJump(this.cursors.space);
+            this.handleMovement();
 
+            this.movementAbilities.handleJump(
+                this.cursors.space
+            );
+        }
     }
 
     handleMovement() {

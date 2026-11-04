@@ -42,4 +42,53 @@ export default class MovementAbilities {
         }
     }
 
+    handleDash(dashKey) {
+        if (!this.abilityManager.isUnlocked('dimensionalDash')) {
+            return;
+        }
+
+        if (this.isDashing) {
+            return;
+        }
+
+        if (!Phaser.Input.Keyboard.JustDown(dashKey)) {
+            return;
+        }
+
+        const body = this.player.body;
+        const config = ABILITY_CONFIG.dimensionalDash;
+
+        this.isDashing = true;
+
+        body.setAccelerationX(0);
+        body.setDragX(0);
+
+        body.setMaxVelocity(config.speed, 1000);
+
+        body.setVelocityX(
+            this.player.facing * config.speed
+        );
+
+        this.dashTimer = this.player.scene.time.delayedCall(
+            config.duration,
+            () => {
+
+                this.isDashing = false;
+
+                body.setVelocityX(0);
+
+                body.setDragX(this.player.friction);
+
+                body.setMaxVelocity(
+                    this.player.speed,
+                    1000
+                );
+
+                this.dashTimer = null;
+
+            }
+        );
+
+    }
+
 }
