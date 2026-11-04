@@ -35,6 +35,8 @@ export default class TestScene extends Phaser.Scene {
         this.player = new Player(this, 80, 180);
 
         this.player.abilityManager.unlock('dimensionalDash');
+        this.player.abilityManager.unlock('wallJump');
+        this.player.abilityManager.unlock('doubleJump');
 
 
         this.physics.add.collider(
@@ -49,6 +51,21 @@ export default class TestScene extends Phaser.Scene {
             180,
             16,
             100
+        );
+
+        const wall = this.add.rectangle(
+            320,
+            180,
+            16,
+            100,
+            0x777777
+        );
+
+        this.physics.add.existing(wall, true);
+
+        this.physics.add.collider(
+            this.player.gameObject,
+            wall
         );
 
         console.log(

@@ -59,7 +59,6 @@ export default class Player {
     update() {
         this.movementAbilities.handleDash(this.keys.dash);
 
-        // Mientras dura el Dash, bloqueamos el movimiento normal
         if (!this.movementAbilities.isDashing) {
 
             this.handleMovement();

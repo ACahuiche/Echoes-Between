@@ -14,21 +14,65 @@ export default class MovementAbilities {
         this.dashTimer = null;
 
         this.isGliding = false;
+
+        this.canWallJump = true;
     }
 
     handleJump(jumpKey) {
 
         const body = this.player.body;
 
+        const touchingLeft =
+            body.blocked.left || body.touching.left;
+
+        const touchingRight =
+            body.blocked.right || body.touching.right;
+
+        const wallDirection = touchingLeft
+            ? 1
+            : touchingRight
+                ? -1
+                : 0;
+
         if (body.onFloor()) {
+
             this.jumpCount = 0;
+            this.canWallJump = true;
+
+        } else if (wallDirection === 0) {
+
+            this.canWallJump = true;
+
         }
 
         if (!Phaser.Input.Keyboard.JustDown(jumpKey)) {
             return;
         }
 
-        const hasDoubleJump = this.abilityManager.isUnlocked('doubleJump');
+        const hasWallJump =
+            this.abilityManager.isUnlocked('wallJump');
+
+        if (hasWallJump && this.canWallJump && wallDirection !== 0) {
+
+            const config = ABILITY_CONFIG.wallJump;
+
+            body.setAccelerationX(0);
+
+            body.setVelocity(
+                wallDirection * config.horizontalForce,
+                config.verticalForce
+            );
+
+            this.player.facing = wallDirection;
+
+            this.jumpCount = 1;
+            this.canWallJump = false;
+
+            return;
+        }
+
+        const hasDoubleJump =
+            this.abilityManager.isUnlocked('doubleJump');
 
         const maxJumps = hasDoubleJump
             ? ABILITY_CONFIG.doubleJump.maxJumps
@@ -40,9 +84,11 @@ export default class MovementAbilities {
 
             this.jumpCount++;
         }
+
     }
 
     handleDash(dashKey) {
+
         if (!this.abilityManager.isUnlocked('dimensionalDash')) {
             return;
         }
@@ -72,27 +118,27 @@ export default class MovementAbilities {
         this.dashTimer = this.player.scene.time.delayedCall(
             config.duration,
             () => {
-        
+
                 this.isDashing = false;
-        
+
                 body.setVelocityX(0);
-        
+
                 body.setDragX(this.player.friction);
-        
+
                 body.setMaxVelocity(
                     this.player.speed,
                     1000
                 );
-        
+
                 const barriers =
                     this.player.scene.dimensionalBarriers || [];
-        
+
                 barriers.forEach(barrier => {
                     barrier.resolvePlayerAfterDash();
                 });
-        
+
                 this.dashTimer = null;
-        
+
             }
         );
 
