@@ -1,3 +1,4 @@
+
 import Phaser from 'phaser';
 import { ABILITY_CONFIG } from '../config/abilityConfig.js';
 
@@ -12,8 +13,6 @@ export default class MovementAbilities {
 
         this.isDashing = false;
         this.dashTimer = null;
-
-        this.isGliding = false;
 
         this.canWallJump = true;
         this.isWallGrabbing = false;

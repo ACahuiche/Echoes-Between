@@ -18,6 +18,16 @@ export const ABILITY_CONFIG = {
         fallSpeed: 120
     },
 
+    aetherGlide: {
+        fallSpeed: 120,
+        durations: [
+            5000,
+            7000,
+            null
+        ],
+        maxLevel: 3
+    },
+
     dimensionalPulse: {
         radius: 96
     },

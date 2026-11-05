@@ -1,6 +1,8 @@
+
 import AbilityManager from '../abilities/AbilityManager.js';
 import MovementAbilities from '../abilities/MovementAbilities.js';
 import DimensionalAbilities from '../abilities/DimensionalAbilities.js';
+import AetherGlide from '../abilities/AetherGlide.js';
 
 export default class Player {
 
@@ -44,6 +46,11 @@ export default class Player {
             this.abilityManager
         );
 
+        this.aetherGlide = new AetherGlide(
+            this,
+            this.abilityManager
+        );
+
         this.cursors = scene.input.keyboard.createCursorKeys();
 
         this.keys = scene.input.keyboard.addKeys({
@@ -56,7 +63,8 @@ export default class Player {
         });
     }
 
-    update() {
+    update(delta = this.scene.game.loop.delta) {
+
         this.movementAbilities.handleDash(this.keys.dash);
 
         if (!this.movementAbilities.isDashing) {
@@ -67,6 +75,13 @@ export default class Player {
                 this.cursors.space
             );
         }
+
+        this.aetherGlide.update(
+            this.keys.glide,
+            this.movementAbilities.isWallGrabbing,
+            this.movementAbilities.isDashing,
+            delta
+        );
     }
 
     handleMovement() {
@@ -74,40 +89,41 @@ export default class Player {
         const body = this.body;
 
         let direction = 0;
-    
+
         const movingLeft =
             this.cursors.left.isDown || this.keys.a.isDown;
-    
+
         const movingRight =
             this.cursors.right.isDown || this.keys.d.isDown;
-    
+
         if (movingLeft && !movingRight) {
             direction = -1;
         }
-    
+
         if (movingRight && !movingLeft) {
             direction = 1;
         }
-    
+
         if (direction !== 0) {
             this.facing = direction;
         }
-    
+
         const isWallGrabbing =
             this.movementAbilities.handleWallGrab(direction);
-    
+
         if (isWallGrabbing) {
+
             body.setAccelerationX(0);
             body.setVelocityX(0);
+
             return;
         }
-    
+
         body.setAccelerationX(
             direction * this.acceleration
         );
-    
-        body.setMaxVelocity(this.speed, 1000);
 
+        body.setMaxVelocity(this.speed, 1000);
     }
 
 }

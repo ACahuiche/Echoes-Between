@@ -37,6 +37,7 @@ export default class TestScene extends Phaser.Scene {
         this.player.abilityManager.unlock('dimensionalDash');
         this.player.abilityManager.unlock('wallJump');
         this.player.abilityManager.unlock('doubleJump');
+        this.player.abilityManager.unlock('aetherGlide');
 
 
         this.physics.add.collider(
@@ -71,6 +72,11 @@ export default class TestScene extends Phaser.Scene {
         console.log(
             'Unlocked abilities:',
             this.player.abilityManager.getUnlockedAbilities()
+        );
+
+        console.log(
+            'Aether Glide level:',
+            this.player.abilityManager.getLevel('aetherGlide')
         );
 
     }

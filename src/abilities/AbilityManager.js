@@ -1,4 +1,8 @@
-import { TEST_CONFIG } from '../config/abilityConfig.js';
+
+import {
+    TEST_CONFIG,
+    ABILITY_CONFIG
+} from '../config/abilityConfig.js';
 
 export default class AbilityManager {
 
@@ -16,9 +20,14 @@ export default class AbilityManager {
             temporalEcho: false
 
         };
+
+        this.abilityLevels = {
+            aetherGlide: 1
+        };
     }
 
     isUnlocked(abilityName) {
+
         if (
             this.testConfig.enabled &&
             this.testConfig.unlockAllAbilities
@@ -55,6 +64,56 @@ export default class AbilityManager {
         }
 
         return false;
+    }
+
+    getLevel(abilityName) {
+
+        return this.abilityLevels[abilityName] ?? 1;
+    }
+
+    setLevel(abilityName, level) {
+
+        if (!(abilityName in this.abilityLevels)) {
+            return false;
+        }
+
+        const maxLevel =
+            ABILITY_CONFIG.aetherGlide.maxLevel;
+
+        if (
+            !Number.isInteger(level) ||
+            level < 1 ||
+            level > maxLevel
+        ) {
+            return false;
+        }
+
+        this.abilityLevels[abilityName] = level;
+
+        console.log(`${abilityName} upgraded to level ${level}`);
+
+        return true;
+    }
+
+    upgrade(abilityName) {
+
+        if (!(abilityName in this.abilityLevels)) {
+            return false;
+        }
+
+        const currentLevel = this.getLevel(abilityName);
+
+        const maxLevel =
+            ABILITY_CONFIG.aetherGlide.maxLevel;
+
+        if (currentLevel >= maxLevel) {
+            return false;
+        }
+
+        return this.setLevel(
+            abilityName,
+            currentLevel + 1
+        );
     }
 
     getUnlockedAbilities() {
