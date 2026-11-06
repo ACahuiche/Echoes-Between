@@ -60,17 +60,21 @@ export default class PulseSwitch {
         if (this.type === 'permanent' && this.isActive) {
             return;
         }
-
+    
         this.isActive = true;
-
-        this.gameObject.setFillStyle(0x00ff88);
-
+    
+        const activeColor = this.type === 'temporary'
+            ? 0x65cfff  // Azul cielo
+            : 0x00ff88; // Verde
+    
+        this.gameObject.setFillStyle(activeColor);
+    
         if (this.type === 'temporary') {
-
+    
             if (this.activationTimer) {
                 this.activationTimer.remove();
             }
-
+    
             this.activationTimer = this.scene.time.delayedCall(
                 this.duration,
                 () => {
@@ -78,7 +82,7 @@ export default class PulseSwitch {
                 }
             );
         }
-
+    
         console.log(`${this.type} switch activated`);
     }
 
