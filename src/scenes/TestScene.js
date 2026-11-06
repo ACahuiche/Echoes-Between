@@ -3,6 +3,7 @@ import Phaser from 'phaser';
 import Player from '../entities/Player.js';
 import DimensionalBarrier from '../objects/DimensionalBarrier.js';
 import PulseSwitch from '../objects/PulseSwitch.js';
+import PressureSwitch from '../objects/PressureSwitch.js';
 
 export default class TestScene extends Phaser.Scene {
 
@@ -40,6 +41,7 @@ export default class TestScene extends Phaser.Scene {
         this.player.abilityManager.unlock('doubleJump');
         this.player.abilityManager.unlock('aetherGlide');
         this.player.abilityManager.unlock('dimensionalPulse');
+        this.player.abilityManager.unlock('temporalEcho');
 
         this.physics.add.collider(
             this.player.gameObject,
@@ -87,6 +89,10 @@ export default class TestScene extends Phaser.Scene {
             type: 'permanent'
         });
 
+        new PressureSwitch(this, 190, 226);
+
+        new PressureSwitch(this, 280, 226);
+
         console.log(
             'Unlocked abilities:',
             this.player.abilityManager.getUnlockedAbilities()
@@ -102,7 +108,26 @@ export default class TestScene extends Phaser.Scene {
     update(time, delta) {
 
         this.player.update(delta);
-
+    
+        const actors = [
+            this.player.gameObject
+        ];
+    
+        // Agregar el Echo si existe.
+        if (this.player.temporalEcho.gameObject) {
+    
+            actors.push(
+                this.player.temporalEcho.gameObject
+            );
+        }
+    
+        // Actualizar todos los Pressure Switches.
+        this.pressureSwitches?.forEach(
+            pressureSwitch => {
+                pressureSwitch.update(actors);
+            }
+        );
+    
     }
 
 }

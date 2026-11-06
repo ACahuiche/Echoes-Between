@@ -4,6 +4,7 @@ import MovementAbilities from '../abilities/MovementAbilities.js';
 import DimensionalAbilities from '../abilities/DimensionalAbilities.js';
 import AetherGlide from '../abilities/AetherGlide.js';
 import DimensionalPulse from '../abilities/DimensionalPulse.js';
+import TemporalEcho from '../abilities/TemporalEcho.js';
 
 export default class Player {
 
@@ -57,6 +58,11 @@ export default class Player {
             this.abilityManager
         );
 
+        this.temporalEcho = new TemporalEcho(
+            this,
+            this.abilityManager
+        );
+
         this.cursors = scene.input.keyboard.createCursorKeys();
 
         this.keys = scene.input.keyboard.addKeys({
@@ -92,6 +98,8 @@ export default class Player {
         this.dimensionalPulse.handleInput(this.keys.pulse);
 
         this.dimensionalPulse.update(delta);
+
+        this.temporalEcho.handleInput(this.keys.echo);
     }
 
     handleMovement() {
