@@ -33,7 +33,7 @@ export const ABILITY_CONFIG = {
     },
 
     temporalEcho: {
-        duration: 5000
+        duration: 3000
     }
 };
 

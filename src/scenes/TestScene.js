@@ -57,19 +57,19 @@ export default class TestScene extends Phaser.Scene {
             100
         );
 
-        const wall = this.add.rectangle(
-            140,
-            180,
+        this.wall = this.add.rectangle(
+            320,
+            120,
             16,
-            100,
+            220,
             0x777777
         );
 
-        this.physics.add.existing(wall, true);
+        this.physics.add.existing(this.wall, true);
 
         this.physics.add.collider(
             this.player.gameObject,
-            wall
+            this.wall
         );
 
         new PulseSwitch(this, 120, 180, 16, 16, {
@@ -91,7 +91,7 @@ export default class TestScene extends Phaser.Scene {
 
         new PressureSwitch(this, 190, 226);
 
-        new PressureSwitch(this, 280, 226);
+        new PressureSwitch(this, 350, 226);
 
         console.log(
             'Unlocked abilities:',
@@ -108,26 +108,35 @@ export default class TestScene extends Phaser.Scene {
     update(time, delta) {
 
         this.player.update(delta);
-    
+
         const actors = [
             this.player.gameObject
         ];
-    
+
         // Agregar el Echo si existe.
         if (this.player.temporalEcho.gameObject) {
-    
+
             actors.push(
                 this.player.temporalEcho.gameObject
             );
         }
-    
+
         // Actualizar todos los Pressure Switches.
         this.pressureSwitches?.forEach(
             pressureSwitch => {
                 pressureSwitch.update(actors);
             }
         );
-    
+
+        const isAnySwitchPressed =
+            this.pressureSwitches?.some(
+                pressureSwitch => pressureSwitch.isPressed
+            ) ?? false;
+
+        this.wall.setVisible(!isAnySwitchPressed);
+
+        this.wall.body.enable = !isAnySwitchPressed;
+
     }
 
 }
