@@ -3,6 +3,7 @@ import AbilityManager from '../abilities/AbilityManager.js';
 import MovementAbilities from '../abilities/MovementAbilities.js';
 import DimensionalAbilities from '../abilities/DimensionalAbilities.js';
 import AetherGlide from '../abilities/AetherGlide.js';
+import DimensionalPulse from '../abilities/DimensionalPulse.js';
 
 export default class Player {
 
@@ -51,6 +52,11 @@ export default class Player {
             this.abilityManager
         );
 
+        this.dimensionalPulse = new DimensionalPulse(
+            this,
+            this.abilityManager
+        );
+
         this.cursors = scene.input.keyboard.createCursorKeys();
 
         this.keys = scene.input.keyboard.addKeys({
@@ -82,6 +88,10 @@ export default class Player {
             this.movementAbilities.isDashing,
             delta
         );
+
+        this.dimensionalPulse.handleInput(this.keys.pulse);
+
+        this.dimensionalPulse.update(delta);
     }
 
     handleMovement() {

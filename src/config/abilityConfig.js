@@ -15,10 +15,6 @@ export const ABILITY_CONFIG = {
     },
 
     aetherGlide: {
-        fallSpeed: 120
-    },
-
-    aetherGlide: {
         fallSpeed: 120,
         durations: [
             5000,
@@ -29,7 +25,11 @@ export const ABILITY_CONFIG = {
     },
 
     dimensionalPulse: {
-        radius: 96
+        radius: 96,
+        duration: 500,
+        lineWidth: 3,
+        color: 0x65f5ff,
+        alpha: 0.9
     },
 
     temporalEcho: {
