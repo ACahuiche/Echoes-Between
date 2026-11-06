@@ -115,37 +115,48 @@ export default class DimensionalPulse {
     detectSwitches() {
 
         const switches = this.scene.pulseSwitches || [];
-
+    
+        const currentDimension =
+            this.scene.dimensionManager.currentDimension;
+    
         const reachedThisFrame = [];
-
+    
         for (const pulseSwitch of switches) {
-
+    
             if (this.reachedSwitches.has(pulseSwitch)) {
                 continue;
             }
-
+    
+            const isAvailable =
+                pulseSwitch.dimension === 'shared' ||
+                pulseSwitch.dimension === currentDimension;
+    
+            if (!isAvailable) {
+                continue;
+            }
+    
             const distance = pulseSwitch.getDistanceFrom(
                 this.origin.x,
                 this.origin.y
             );
-
+    
             if (distance <= this.currentRadius) {
-
+    
                 reachedThisFrame.push({
                     pulseSwitch,
                     distance
                 });
             }
         }
-
+    
         reachedThisFrame.sort(
             (a, b) => a.distance - b.distance
         );
-
+    
         for (const entry of reachedThisFrame) {
-
+    
             this.reachedSwitches.add(entry.pulseSwitch);
-
+    
             entry.pulseSwitch.activate();
         }
     }

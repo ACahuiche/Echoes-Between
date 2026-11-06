@@ -1,4 +1,3 @@
-
 import AbilityManager from '../abilities/AbilityManager.js';
 import MovementAbilities from '../abilities/MovementAbilities.js';
 import DimensionalAbilities from '../abilities/DimensionalAbilities.js';
@@ -17,7 +16,6 @@ export default class Player {
         this.friction = 1800;
         this.jumpForce = -400;
 
-        // Dirección: 1 = derecha, -1 = izquierda
         this.facing = 1;
 
         this.gameObject = scene.add.rectangle(
@@ -71,11 +69,17 @@ export default class Player {
             dash: 'CTRL',
             glide: 'C',
             pulse: 'F',
-            echo: 'Q'
+            echo: 'Q',
+            shift: 'SHIFT'
         });
     }
 
     update(delta = this.scene.game.loop.delta) {
+
+        // Cambio dimensional: SHIFT.
+        this.scene.dimensionManager?.handleInput(
+            this.keys.shift
+        );
 
         this.movementAbilities.handleDash(this.keys.dash);
 

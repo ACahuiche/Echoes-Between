@@ -2,9 +2,11 @@ import Phaser from 'phaser';
 
 export default class PressureSwitch {
 
-    constructor(scene, x, y, width = 24, height = 8) {
+    constructor(scene, x, y, width = 24, height = 8, options = {}) {
 
         this.scene = scene;
+
+        this.dimension = options.dimension ?? 'shared';
 
         this.isPressed = false;
 
@@ -26,9 +28,23 @@ export default class PressureSwitch {
         }
 
         scene.pressureSwitches.push(this);
+
+        scene.dimensionManager.register(
+            this.gameObject,
+            this.dimension
+        );
     }
 
-    update(actors) {
+    update(actors, currentDimension) {
+
+        const isAvailable =
+            this.dimension === 'shared' ||
+            this.dimension === currentDimension;
+
+        if (!isAvailable) {
+            this.setPressed(false);
+            return;
+        }
 
         const switchBounds = this.gameObject.getBounds();
 
@@ -45,6 +61,11 @@ export default class PressureSwitch {
                 actorBounds
             );
         });
+
+        this.setPressed(isPressed);
+    }
+
+    setPressed(isPressed) {
 
         if (this.isPressed === isPressed) {
             return;

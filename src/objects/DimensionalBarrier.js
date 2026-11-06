@@ -1,9 +1,11 @@
 export default class DimensionalBarrier {
 
-    constructor(scene, player, x, y, width, height) {
+    constructor(scene, player, x, y, width, height, options = {}) {
 
         this.scene = scene;
         this.player = player;
+
+        this.dimension = options.dimension ?? 'shared';
 
         this.gameObject = scene.add.rectangle(
             x,
@@ -32,12 +34,16 @@ export default class DimensionalBarrier {
             () => !player.movementAbilities.isDashing
         );
 
-    
         if (!scene.dimensionalBarriers) {
             scene.dimensionalBarriers = [];
         }
 
         scene.dimensionalBarriers.push(this);
+
+        scene.dimensionManager.register(
+            this.gameObject,
+            this.dimension
+        );
     }
 
     resolvePlayerAfterDash() {
@@ -56,12 +62,11 @@ export default class DimensionalBarrier {
         }
 
         const separationPadding = 1;
-    
+
         const leftDistance =
             playerBody.right -
             barrierBody.left +
             separationPadding;
-
 
         const rightDistance =
             barrierBody.right -
@@ -93,19 +98,18 @@ export default class DimensionalBarrier {
 
         playerBody.setVelocityX(0);
         playerBody.setAccelerationX(0);
-
     }
 
     destroy() {
 
         this.collider.destroy();
+
         this.gameObject.destroy();
 
         this.scene.dimensionalBarriers =
             this.scene.dimensionalBarriers.filter(
                 barrier => barrier !== this
             );
-
     }
 
 }

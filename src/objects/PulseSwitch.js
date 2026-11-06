@@ -10,6 +10,8 @@ export default class PulseSwitch {
 
         this.duration = options.duration ?? 2000;
 
+        this.dimension = options.dimension ?? 'shared';
+
         this.isActive = false;
 
         this.activationTimer = null;
@@ -31,6 +33,11 @@ export default class PulseSwitch {
         }
 
         this.scene.pulseSwitches.push(this);
+
+        this.scene.dimensionManager.register(
+            this.gameObject,
+            this.dimension
+        );
     }
 
     getDistanceFrom(x, y) {
@@ -60,21 +67,21 @@ export default class PulseSwitch {
         if (this.type === 'permanent' && this.isActive) {
             return;
         }
-    
+
         this.isActive = true;
-    
+
         const activeColor = this.type === 'temporary'
-            ? 0x65cfff  // Azul cielo
-            : 0x00ff88; // Verde
-    
+            ? 0x65cfff
+            : 0x00ff88;
+
         this.gameObject.setFillStyle(activeColor);
-    
+
         if (this.type === 'temporary') {
-    
+
             if (this.activationTimer) {
                 this.activationTimer.remove();
             }
-    
+
             this.activationTimer = this.scene.time.delayedCall(
                 this.duration,
                 () => {
@@ -82,7 +89,7 @@ export default class PulseSwitch {
                 }
             );
         }
-    
+
         console.log(`${this.type} switch activated`);
     }
 
