@@ -62,7 +62,6 @@ export default class LevelBuilder {
 
         }
 
-        // Registrar mecanismos después de crear todos los objetos.
         this.mechanismManager = new MechanismManager(
             this.scene,
             this.objectsById,

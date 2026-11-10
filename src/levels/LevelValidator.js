@@ -21,7 +21,8 @@ const VALID_CONDITION_MODES = [
     'all',
     'any',
     'latch',
-    'momentary'
+    'momentary',
+    'toggle'
 ];
 
 export default class LevelValidator {

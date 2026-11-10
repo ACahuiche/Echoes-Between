@@ -38,10 +38,13 @@ export default class MechanismManager {
             gameObject,
             targetId: data.target,
             conditions: data.conditions,
-            isOpen: false
+            isOpen: false,
+            wasConditionMet: false,
+            isToggled: false
         });
 
     }
+
 
     update() {
 
@@ -49,8 +52,46 @@ export default class MechanismManager {
 
         for (const mechanism of this.mechanisms) {
 
-            const shouldOpen =
+            const conditionMet =
                 this.evaluateConditions(mechanism.conditions);
+
+            let shouldOpen = false;
+
+            switch (mechanism.conditions.mode) {
+
+                case 'momentary':
+
+                    shouldOpen = conditionMet;
+
+                    break;
+
+                case 'latch':
+
+                    if (conditionMet) {
+                        mechanism.isToggled = true;
+                    }
+
+                    shouldOpen = mechanism.isToggled;
+
+                    break;
+
+                case 'toggle':
+
+                    if (
+                        conditionMet &&
+                        !mechanism.wasConditionMet
+                    ) {
+                        mechanism.isToggled =
+                            !mechanism.isToggled;
+                    }
+
+                    shouldOpen = mechanism.isToggled;
+
+                    break;
+
+            }
+
+            mechanism.wasConditionMet = conditionMet;
 
             mechanism.isOpen = shouldOpen;
 
@@ -75,35 +116,36 @@ export default class MechanismManager {
 
     }
 
+
     evaluateConditions(conditions) {
 
         const switches = conditions.switches.map(id =>
             this.objectsById.get(id)
         );
-    
+
         switch (conditions.mode) {
-    
+
             case 'all':
                 return switches.every(
                     pressureSwitch => pressureSwitch.isActive
                 );
-    
+
             case 'any':
             case 'momentary':
                 return switches.some(
                     pressureSwitch => pressureSwitch.isActive
                 );
-    
+
             case 'latch':
                 return switches.every(
                     pressureSwitch => pressureSwitch.hasBeenActivated
                 );
-    
+
             default:
                 return false;
-    
+
         }
-    
+
     }
 
     applyState(mechanism, isOpen) {
@@ -121,7 +163,7 @@ export default class MechanismManager {
             !dimensionEntry ||
             dimensionEntry.dimension === 'shared' ||
             dimensionEntry.dimension ===
-                this.scene.dimensionManager.currentDimension;
+            this.scene.dimensionManager.currentDimension;
 
         gameObject.setVisible(
             dimensionActive && !isOpen

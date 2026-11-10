@@ -32,7 +32,6 @@ export default class TestScene extends Phaser.Scene {
 
         this.dimensionManager.setPlayer(this.player);
 
-        // Desbloquear habilidades para pruebas.
         this.player.abilityManager.unlock('dimensionalDash');
         this.player.abilityManager.unlock('wallJump');
         this.player.abilityManager.unlock('doubleJump');
@@ -40,7 +39,6 @@ export default class TestScene extends Phaser.Scene {
         this.player.abilityManager.unlock('dimensionalPulse');
         this.player.abilityManager.unlock('temporalEcho');
 
-        // Construir nivel y mecanismos.
         this.levelBuilder = new LevelBuilder(
             this,
             this.player,
@@ -80,7 +78,6 @@ export default class TestScene extends Phaser.Scene {
         const currentDimension =
             this.dimensionManager.currentDimension;
 
-        // Actualizar PressureSwitch.
         this.pressureSwitches?.forEach(pressureSwitch => {
 
             pressureSwitch.update(
@@ -90,7 +87,6 @@ export default class TestScene extends Phaser.Scene {
 
         });
 
-        // Actualizar mecanismos.
         this.level.mechanismManager.update();
 
     }
