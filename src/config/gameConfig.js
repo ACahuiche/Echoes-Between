@@ -20,7 +20,7 @@ const gameConfig = {
             gravity: {
                 y: 900
             },
-            debug: true
+            debug: false
         }
     },
 
