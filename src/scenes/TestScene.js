@@ -1,7 +1,10 @@
+
 import Phaser from 'phaser';
+
 import Player from '../entities/Player.js';
 import DimensionManager from '../dimensions/DimensionManager.js';
 import LevelBuilder from '../levels/LevelBuilder.js';
+
 import level01 from '../levels/data/level01.js';
 
 export default class TestScene extends Phaser.Scene {
@@ -11,6 +14,7 @@ export default class TestScene extends Phaser.Scene {
     }
 
     create() {
+
         this.physics.world.setBounds(
             0,
             0,
@@ -28,6 +32,7 @@ export default class TestScene extends Phaser.Scene {
 
         this.dimensionManager.setPlayer(this.player);
 
+        // Desbloquear habilidades para pruebas.
         this.player.abilityManager.unlock('dimensionalDash');
         this.player.abilityManager.unlock('wallJump');
         this.player.abilityManager.unlock('doubleJump');
@@ -35,6 +40,7 @@ export default class TestScene extends Phaser.Scene {
         this.player.abilityManager.unlock('dimensionalPulse');
         this.player.abilityManager.unlock('temporalEcho');
 
+        // Construir nivel y mecanismos.
         this.levelBuilder = new LevelBuilder(
             this,
             this.player,
@@ -42,8 +48,6 @@ export default class TestScene extends Phaser.Scene {
         );
 
         this.level = this.levelBuilder.build(level01);
-
-        this.wall = this.level.objectsById.get('main_wall');
 
         console.log(
             'Unlocked abilities:',
@@ -70,30 +74,25 @@ export default class TestScene extends Phaser.Scene {
             actors.push(
                 this.player.temporalEcho.gameObject
             );
+
         }
 
         const currentDimension =
             this.dimensionManager.currentDimension;
 
-        this.pressureSwitches?.forEach(
-            pressureSwitch => {
+        // Actualizar PressureSwitch.
+        this.pressureSwitches?.forEach(pressureSwitch => {
 
-                pressureSwitch.update(
-                    actors,
-                    currentDimension
-                );
+            pressureSwitch.update(
+                actors,
+                currentDimension
+            );
 
-            }
-        );
+        });
 
-        const isAnySwitchPressed =
-            this.pressureSwitches?.some(
-                pressureSwitch => pressureSwitch.isPressed
-            ) ?? false;
+        // Actualizar mecanismos.
+        this.level.mechanismManager.update();
 
-        this.wall.setVisible(!isAnySwitchPressed);
-
-        this.wall.body.enable = !isAnySwitchPressed;
     }
 
 }

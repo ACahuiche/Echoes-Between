@@ -71,6 +71,7 @@ export default class PressureSwitch {
         if (!isAvailable) {
 
             this.isPressed = false;
+            this.wasPressed = false;
 
             // Los momentáneos dejan de funcionar
             // al abandonar su dimensión.

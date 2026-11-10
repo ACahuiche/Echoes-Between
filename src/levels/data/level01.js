@@ -23,6 +23,10 @@ export default {
 
     objects: [
 
+        // =====================================
+        // SHARED ENVIRONMENT
+        // =====================================
+
         {
             id: 'main_ground',
             type: 'platform',
@@ -31,36 +35,6 @@ export default {
             width: 480,
             height: 40,
             dimension: 'shared'
-        },
-
-        {
-            id: 'aether_platform1',
-            type: 'platform',
-            x: 150,
-            y: 170,
-            width: 100,
-            height: 12,
-            dimension: 'aether'
-        },
-
-        {
-            id: 'aether_platform2',
-            type: 'platform',
-            x: 100,
-            y: 120,
-            width: 100,
-            height: 12,
-            dimension: 'aether'
-        },
-
-        {
-            id: 'umbra_platform',
-            type: 'platform',
-            x: 370,
-            y: 185,
-            width: 100,
-            height: 12,
-            dimension: 'umbra'
         },
 
         {
@@ -83,7 +57,48 @@ export default {
             dimension: 'shared'
         },
 
-        // Interruptores de pulso.
+        // =====================================
+        // AETHER ENVIRONMENT
+        // =====================================
+
+        {
+            id: 'aether_platform1',
+            type: 'platform',
+            x: 150,
+            y: 170,
+            width: 100,
+            height: 12,
+            dimension: 'aether'
+        },
+
+        {
+            id: 'aether_platform2',
+            type: 'platform',
+            x: 100,
+            y: 120,
+            width: 100,
+            height: 12,
+            dimension: 'aether'
+        },
+
+        // =====================================
+        // UMBRA ENVIRONMENT
+        // =====================================
+
+        {
+            id: 'umbra_platform',
+            type: 'platform',
+            x: 370,
+            y: 185,
+            width: 100,
+            height: 12,
+            dimension: 'umbra'
+        },
+
+        // =====================================
+        // PULSE SWITCHES
+        // =====================================
+
         /*
         {
             id: 'switch_aether',
@@ -131,7 +146,10 @@ export default {
         },
         */
 
-        // Interruptor momentáneo de Aether.
+        // =====================================
+        // PRESSURE SWITCHES
+        // =====================================
+
         {
             id: 'pressure_aether',
             type: 'pressureSwitch',
@@ -143,7 +161,6 @@ export default {
             }
         },
 
-        // Interruptor permanente de Umbra.
         {
             id: 'pressure_umbra',
             type: 'pressureSwitch',
@@ -151,24 +168,46 @@ export default {
             y: 175,
             dimension: 'umbra',
             options: {
-                mode: 'latch'
+                mode: 'momentary'
             }
         }
 
-        /*
-        // Ejemplo de interruptor alternable.
+    ],
+
+    // =====================================
+    // MECHANISMS
+    // =====================================
+
+    mechanisms: [
+
         {
-            id: 'pressure_toggle',
-            type: 'pressureSwitch',
-            x: 200,
-            y: 110,
-            dimension: 'aether',
-            options: {
-                mode: 'toggle'
+            id: 'main_wall_control_aether',
+            type: 'switchGate',
+            target: 'main_wall',
+    
+            conditions: {
+                mode: 'momentary',
+    
+                switches: [
+                    'pressure_aether'
+                ]
+            }
+        },
+    
+        {
+            id: 'main_wall_control_umbra',
+            type: 'switchGate',
+            target: 'main_wall',
+    
+            conditions: {
+                mode: 'momentary',
+    
+                switches: [
+                    'pressure_umbra'
+                ]
             }
         }
-        */
-
+    
     ]
 
 };

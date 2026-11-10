@@ -1,5 +1,7 @@
+
 import LevelValidator from './LevelValidator.js';
 import LevelObjectFactory from './LevelObjectFactory.js';
+import MechanismManager from '../mechanisms/MechanismManager.js';
 
 export default class LevelBuilder {
 
@@ -18,6 +20,8 @@ export default class LevelBuilder {
         this.objects = [];
         this.objectsById = new Map();
 
+        this.mechanismManager = null;
+
     }
 
     build(levelData) {
@@ -30,6 +34,7 @@ export default class LevelBuilder {
                 `Invalid level "${levelData.id}":\n` +
                 errors.map(error => `- ${error}`).join('\n')
             );
+
         }
 
         this.configureDimensions(levelData);
@@ -47,12 +52,22 @@ export default class LevelBuilder {
             this.objects.push(createdObject);
 
             if (objectData.id) {
+
                 this.objectsById.set(
                     objectData.id,
                     createdObject
                 );
+
             }
+
         }
+
+        // Registrar mecanismos después de crear todos los objetos.
+        this.mechanismManager = new MechanismManager(
+            this.scene,
+            this.objectsById,
+            levelData.mechanisms ?? []
+        );
 
         console.log(
             `Level loaded: ${levelData.name ?? levelData.id}`
@@ -62,13 +77,19 @@ export default class LevelBuilder {
             `Objects created: ${this.objects.length}`
         );
 
+        console.log(
+            `Mechanisms created: ${this.mechanismManager.mechanisms.length}`
+        );
+
         return {
             id: levelData.id,
             name: levelData.name,
             objects: this.objects,
             objectsById: this.objectsById,
-            playerSpawn: levelData.playerSpawn
+            playerSpawn: levelData.playerSpawn,
+            mechanismManager: this.mechanismManager
         };
+
     }
 
     configureDimensions(levelData) {
@@ -84,6 +105,7 @@ export default class LevelBuilder {
                 ...this.dimensionManager.backgrounds,
                 ...dimensions.backgrounds
             };
+
         }
 
         this.scene.cameras.main.setBackgroundColor(
@@ -91,6 +113,7 @@ export default class LevelBuilder {
                 dimensions.initial
             ]
         );
+
     }
 
 }

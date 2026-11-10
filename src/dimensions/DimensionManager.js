@@ -1,3 +1,4 @@
+
 import Phaser from 'phaser';
 
 export default class DimensionManager {
@@ -33,6 +34,11 @@ export default class DimensionManager {
             dimension
         };
 
+        // Indica si algún mecanismo ha abierto este objeto.
+        if (gameObject.mechanismOpen === undefined) {
+            gameObject.mechanismOpen = false;
+        }
+
         this.objects.push(entry);
 
         this.applyObjectState(entry);
@@ -42,16 +48,25 @@ export default class DimensionManager {
 
     applyObjectState(entry) {
 
-        const isActive =
+        const gameObject = entry.gameObject;
+
+        // Comprueba si el objeto pertenece a la dimensión actual.
+        const isDimensionActive =
             entry.dimension === 'shared' ||
             entry.dimension === this.currentDimension;
 
-        const gameObject = entry.gameObject;
+        // Comprueba si algún mecanismo abrió el objeto.
+        const isOpen = gameObject.mechanismOpen ?? false;
 
-        gameObject.setVisible(isActive);
+        // El objeto solo está disponible si pertenece
+        // a la dimensión actual y no está abierto.
+        const isAvailable =
+            isDimensionActive && !isOpen;
+
+        gameObject.setVisible(isAvailable);
 
         if (gameObject.body) {
-            gameObject.body.enable = isActive;
+            gameObject.body.enable = isAvailable;
         }
     }
 
@@ -117,13 +132,14 @@ export default class DimensionManager {
                 continue;
             }
 
-            const body = entry.gameObject.body;
+            const gameObject = entry.gameObject;
 
-            if (!body || !body.enable) {
-                // Los cuerpos de dimensiones inactivas
-                // pueden estar deshabilitados actualmente.
-                // No debemos ignorarlos por ese motivo.
+            // Los objetos abiertos ya no representan obstáculos.
+            if (gameObject.mechanismOpen) {
+                continue;
             }
+
+            const body = gameObject.body;
 
             if (!body) {
                 continue;

@@ -14,6 +14,8 @@ export default class PulseSwitch {
 
         this.isActive = false;
 
+        this.hasBeenActivated = false;
+
         this.activationTimer = null;
 
         this.gameObject = scene.add.rectangle(
@@ -69,6 +71,7 @@ export default class PulseSwitch {
         }
 
         this.isActive = true;
+        this.hasBeenActivated = true;
 
         const activeColor = this.type === 'temporary'
             ? 0x65cfff
