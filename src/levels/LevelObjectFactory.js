@@ -1,6 +1,7 @@
 import DimensionalBarrier from '../objects/DimensionalBarrier.js';
 import PulseSwitch from '../objects/PulseSwitch.js';
 import PressureSwitch from '../objects/PressureSwitch.js';
+import AbilityPickup from '../objects/AbilityPickup.js';
 
 export default class LevelObjectFactory {
 
@@ -40,6 +41,19 @@ export default class LevelObjectFactory {
                         ...objectData.options,
                         dimension
                     }
+                );
+
+                break;
+
+            case 'abilityPickup':
+
+                createdObject = new AbilityPickup(
+                    this.scene,
+                    this.player,
+                    objectData.x,
+                    objectData.y,
+                    objectData.ability,
+                    objectData.options ?? {}
                 );
 
                 break;

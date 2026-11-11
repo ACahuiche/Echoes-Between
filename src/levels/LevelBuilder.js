@@ -2,6 +2,7 @@
 import LevelValidator from './LevelValidator.js';
 import LevelObjectFactory from './LevelObjectFactory.js';
 import MechanismManager from '../mechanisms/MechanismManager.js';
+import Goal from '../objects/Goal.js';
 
 export default class LevelBuilder {
 
@@ -21,10 +22,11 @@ export default class LevelBuilder {
         this.objectsById = new Map();
 
         this.mechanismManager = null;
+        this.goal = null;
 
     }
 
-    build(levelData) {
+    build(levelData, onGoalReached = () => {}) {
 
         const errors = LevelValidator.validate(levelData);
 
@@ -68,6 +70,24 @@ export default class LevelBuilder {
             levelData.mechanisms ?? []
         );
 
+        // Crear Goal si el nivel lo tiene.
+        if (levelData.goal) {
+
+            this.goal = new Goal(
+                this.scene,
+                this.player,
+                levelData.goal.x,
+                levelData.goal.y,
+                levelData.goal.options ?? {}
+            );
+
+            this.scene.events.once(
+                'goal-reached',
+                onGoalReached
+            );
+
+        }
+
         console.log(
             `Level loaded: ${levelData.name ?? levelData.id}`
         );
@@ -80,13 +100,24 @@ export default class LevelBuilder {
             `Mechanisms created: ${this.mechanismManager.mechanisms.length}`
         );
 
+        console.log(
+            `Goal created: ${this.goal !== null}`
+        );
+
         return {
+
             id: levelData.id,
             name: levelData.name,
+
             objects: this.objects,
             objectsById: this.objectsById,
+
             playerSpawn: levelData.playerSpawn,
-            mechanismManager: this.mechanismManager
+
+            mechanismManager: this.mechanismManager,
+
+            goal: this.goal
+
         };
 
     }

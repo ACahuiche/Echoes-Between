@@ -4,16 +4,21 @@ import Phaser from 'phaser';
 import Player from '../entities/Player.js';
 import DimensionManager from '../dimensions/DimensionManager.js';
 import LevelBuilder from '../levels/LevelBuilder.js';
+import LevelComplete from './LevelComplete.js';
 
 import level01 from '../levels/data/level01.js';
+import level02 from '../levels/data/level02.js';
+import level03 from '../levels/data/level03.js';
 
 export default class TestScene extends Phaser.Scene {
 
     constructor() {
+
         super('TestScene');
+
     }
 
-    create() {
+    create(data = {}) {
 
         this.physics.world.setBounds(
             0,
@@ -22,30 +27,98 @@ export default class TestScene extends Phaser.Scene {
             270
         );
 
+        // Niveles disponibles.
+        this.levels = [
+            level01,
+            level02,
+            level03
+        ];
+
+        // Determinar qué nivel cargar.
+        this.currentLevelId =
+            data.levelId ?? 'level01';
+
+        const levelData = this.levels.find(
+            level => level.id === this.currentLevelId
+        );
+
+        if (!levelData) {
+
+            throw new Error(
+                `Level not found: ${this.currentLevelId}`
+            );
+
+        }
+
+        this.isLevelCompleted = false;
+
+        // Limpiar referencias de interruptores anteriores.
+        this.pressureSwitches = [];
+
+        // Limpiar referencias de tutoriales.
+        this.tutorialText = null;
+        this.tutorialKey = null;
+        this.tutorialAbility = null;
+
+        // Crear administrador dimensional.
         this.dimensionManager = new DimensionManager(this);
 
+        // Crear jugador.
         this.player = new Player(
             this,
-            level01.playerSpawn.x,
-            level01.playerSpawn.y
+            levelData.playerSpawn.x,
+            levelData.playerSpawn.y
         );
 
         this.dimensionManager.setPlayer(this.player);
 
-        this.player.abilityManager.unlock('dimensionalDash');
-        this.player.abilityManager.unlock('wallJump');
-        this.player.abilityManager.unlock('doubleJump');
-        this.player.abilityManager.unlock('aetherGlide');
-        this.player.abilityManager.unlock('dimensionalPulse');
-        this.player.abilityManager.unlock('temporalEcho');
+        // Habilidades desbloqueadas para pruebas.
+        //this.player.abilityManager.unlock('dimensionalDash');
+        //this.player.abilityManager.unlock('wallJump');
+        //this.player.abilityManager.unlock('doubleJump');
+        //this.player.abilityManager.unlock('aetherGlide');
+        //this.player.abilityManager.unlock('dimensionalPulse');
+        //this.player.abilityManager.unlock('temporalEcho');
 
+        // Construir nivel.
         this.levelBuilder = new LevelBuilder(
             this,
             this.player,
             this.dimensionManager
         );
 
-        this.level = this.levelBuilder.build(level01);
+        this.level = this.levelBuilder.build(
+            levelData,
+            () => this.completeLevel()
+        );
+
+        // Iniciar cronómetro.
+        this.levelStartTime = this.time.now;
+
+        // Tutorial inicial.
+        this.createTutorial(levelData.id);
+
+        // Escuchar desbloqueos de habilidades.
+        this.events.on(
+            'ability-unlocked',
+            this.showAbilityTutorial,
+            this
+        );
+
+        // Limpiar listeners al cerrar la escena.
+        this.events.once('shutdown', () => {
+
+            this.events.off(
+                'ability-unlocked',
+                this.showAbilityTutorial,
+                this
+            );
+
+        });
+
+        console.log(
+            `Current level: ${levelData.name}`
+        );
 
         console.log(
             'Unlocked abilities:',
@@ -61,7 +134,13 @@ export default class TestScene extends Phaser.Scene {
 
     update(time, delta) {
 
+        if (this.isLevelCompleted) return;
+
         this.player.update(delta);
+
+        // Comprobar si el jugador completó el tutorial
+        // de la habilidad recién desbloqueada.
+        this.updateAbilityTutorial();
 
         const actors = [
             this.player.gameObject
@@ -88,6 +167,254 @@ export default class TestScene extends Phaser.Scene {
         });
 
         this.level.mechanismManager.update();
+
+    }
+
+    completeLevel() {
+
+        if (this.isLevelCompleted) return;
+
+        this.isLevelCompleted = true;
+
+        // Calcular tiempo transcurrido.
+        const elapsed =
+            this.time.now - this.levelStartTime;
+
+        const minutes = Math.floor(elapsed / 60000);
+
+        const seconds = Math.floor(
+            (elapsed % 60000) / 1000
+        );
+
+        const centiseconds = Math.floor(
+            (elapsed % 1000) / 10
+        );
+
+        const formattedTime =
+            `${String(minutes).padStart(2, '0')}:` +
+            `${String(seconds).padStart(2, '0')}.` +
+            `${String(centiseconds).padStart(2, '0')}`;
+
+        // Detener movimiento y desactivar al jugador.
+        this.player.body.setVelocity(0, 0);
+        this.player.body.setAcceleration(0, 0);
+        this.player.body.enable = false;
+
+        // Buscar siguiente nivel.
+        const currentIndex = this.levels.findIndex(
+            level => level.id === this.currentLevelId
+        );
+
+        const nextLevel =
+            this.levels[currentIndex + 1] ?? null;
+
+        console.log('Level completed!');
+        console.log(`Completion time: ${formattedTime}`);
+
+        // Mostrar pantalla de victoria.
+        this.levelCompleteScreen = new LevelComplete(
+            this,
+            {
+                levelName: this.level.name,
+                time: formattedTime,
+                nextLevelName: nextLevel?.name ?? null
+            },
+            () => {
+
+                const destinationId =
+                    nextLevel?.id ?? this.currentLevelId;
+
+                this.scene.restart({
+                    levelId: destinationId
+                });
+
+            }
+        );
+
+    }
+
+    // --------------------------------------------------
+    // TUTORIALES INICIALES
+    // --------------------------------------------------
+
+    createTutorial(levelId) {
+
+        if (levelId === 'level01') {
+
+            this.showInitialTutorial(
+                'USE ARROW KEYS TO MOVE',
+                'Move'
+            );
+
+            return;
+
+        }
+
+        if (levelId === 'level02') {
+
+            this.showInitialTutorial(
+                'PRESS SHIFT TO SWITCH BETWEEN AETHER AND UMBRA',
+                'Shift'
+            );
+
+        }
+
+        // Level 03 tiene un tutorial que aparece
+        // únicamente después de recoger el coleccionable.
+
+    }
+
+    showInitialTutorial(message, expectedKey) {
+
+        this.removeTutorial();
+
+        this.tutorialKey = expectedKey;
+
+        this.tutorialText = this.add.text(
+            240,
+            12,
+            message,
+            {
+                fontFamily: 'Arial',
+                fontSize: '12px',
+                color: '#ffffff',
+                fontStyle: 'bold',
+                backgroundColor: '#00000099',
+                padding: {
+                    x: 8,
+                    y: 6
+                }
+            }
+        );
+
+        this.tutorialText
+            .setOrigin(0.5, 0)
+            .setScrollFactor(0)
+            .setDepth(100);
+
+        this.input.keyboard.on(
+            'keydown',
+            this.handleTutorialInput,
+            this
+        );
+
+    }
+
+    handleTutorialInput(event) {
+
+        if (!this.tutorialText) return;
+
+        // Primera instrucción del nivel 01:
+        // esperar a que el jugador se mueva.
+        if (this.tutorialKey === 'Move') {
+
+            const moved =
+                event.code === 'ArrowLeft' ||
+                event.code === 'ArrowRight';
+
+            if (!moved) return;
+
+            // Mostrar la siguiente instrucción.
+            this.showInitialTutorial(
+                'PRESS SPACE TO JUMP',
+                'Space'
+            );
+
+            return;
+
+        }
+
+        // Tutorial de salto.
+        if (this.tutorialKey === 'Space') {
+
+            if (event.code !== 'Space') return;
+
+            this.removeTutorial();
+
+            return;
+
+        }
+
+        // Tutorial de cambio dimensional.
+        if (this.tutorialKey === 'Shift') {
+
+            if (event.key !== 'Shift') return;
+
+            this.removeTutorial();
+
+        }
+
+    }
+
+    // --------------------------------------------------
+    // TUTORIALES DE HABILIDADES
+    // --------------------------------------------------
+
+    showAbilityTutorial(abilityName) {
+
+        if (abilityName !== 'doubleJump') return;
+
+        // Eliminar cualquier tutorial anterior.
+        this.removeTutorial();
+
+        this.tutorialAbility = abilityName;
+
+        this.tutorialText = this.add.text(
+            240,
+            12,
+            'PRESS SPACE IN THE AIR TO JUMP AGAIN',
+            {
+                fontFamily: 'Arial',
+                fontSize: '12px',
+                color: '#ffffff',
+                fontStyle: 'bold',
+                backgroundColor: '#00000099',
+                padding: {
+                    x: 8,
+                    y: 6
+                }
+            }
+        );
+
+        this.tutorialText
+            .setOrigin(0.5, 0)
+            .setScrollFactor(0)
+            .setDepth(100);
+
+    }
+
+    updateAbilityTutorial() {
+
+        if (!this.tutorialAbility) return;
+
+        if (
+            this.tutorialAbility === 'doubleJump' &&
+            this.player.movementAbilities.hasPerformedDoubleJump()
+        ) {
+
+            this.removeTutorial();
+
+        }
+
+    }
+
+    removeTutorial() {
+
+        if (this.tutorialText) {
+
+            this.tutorialText.destroy();
+
+        }
+
+        this.tutorialText = null;
+        this.tutorialKey = null;
+        this.tutorialAbility = null;
+
+        this.input.keyboard.off(
+            'keydown',
+            this.handleTutorialInput,
+            this
+        );
 
     }
 

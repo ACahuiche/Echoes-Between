@@ -6,8 +6,8 @@ export default {
     name: 'The First Shift',
 
     playerSpawn: {
-        x: 80,
-        y: 180
+        x: 40,
+        y: 210
     },
 
     dimensions: {
@@ -23,10 +23,7 @@ export default {
 
     objects: [
 
-        // =====================================
-        // SHARED ENVIRONMENT
-        // =====================================
-
+        // Suelo
         {
             id: 'main_ground',
             type: 'platform',
@@ -37,177 +34,91 @@ export default {
             dimension: 'shared'
         },
 
+        // Plataformas para aprender a saltar
         {
-            id: 'umbra_barrier',
-            type: 'dimensionalBarrier',
-            x: 220,
-            y: 120,
-            width: 16,
-            height: 220,
-            dimension: 'shared'
-        },
-
-        {
-            id: 'main_wall',
-            type: 'wall',
-            x: 320,
-            y: 120,
-            width: 16,
-            height: 220,
-            dimension: 'shared'
-        },
-
-        // =====================================
-        // AETHER ENVIRONMENT
-        // =====================================
-
-        {
-            id: 'aether_platform1',
+            id: 'platform_01',
             type: 'platform',
-            x: 150,
+            x: 115,
+            y: 200,
+            width: 64,
+            height: 12,
+            dimension: 'shared'
+        },
+
+        {
+            id: 'platform_02',
+            type: 'platform',
+            x: 205,
             y: 170,
-            width: 100,
+            width: 64,
             height: 12,
-            dimension: 'aether'
+            dimension: 'shared'
         },
 
         {
-            id: 'aether_platform2',
+            id: 'platform_03',
             type: 'platform',
-            x: 100,
+            x: 260,
+            y: 100,
+            width: 64,
+            height: 12,
+            dimension: 'shared'
+        },
+
+        // Puerta
+        {
+            id: 'main_gate',
+            type: 'wall',
+            x: 350,
             y: 120,
-            width: 100,
-            height: 12,
-            dimension: 'aether'
+            width: 16,
+            height: 220,
+            dimension: 'shared'
         },
 
-        // =====================================
-        // UMBRA ENVIRONMENT
-        // =====================================
-
+        // Interruptor permanente
         {
-            id: 'umbra_platform',
-            type: 'platform',
-            x: 370,
-            y: 185,
-            width: 100,
-            height: 12,
-            dimension: 'umbra'
-        },
-
-        // =====================================
-        // PULSE SWITCHES
-        // =====================================
-
-        /*
-        {
-            id: 'switch_aether',
-            type: 'pulseSwitch',
-            x: 120,
-            y: 180,
-            dimension: 'aether',
-            options: {
-                type: 'permanent'
-            }
-        },
-
-        {
-            id: 'switch_umbra',
-            type: 'pulseSwitch',
-            x: 165,
-            y: 180,
-            dimension: 'umbra',
-            options: {
-                type: 'permanent'
-            }
-        },
-
-        {
-            id: 'switch_shared',
-            type: 'pulseSwitch',
-            x: 80,
-            y: 160,
+            id: 'pressure_main',
+            type: 'pressureSwitch',
+            x: 260,
+            y: 90,
             dimension: 'shared',
             options: {
-                type: 'temporary',
-                duration: 3000
-            }
-        },
-
-        {
-            id: 'switch_umbra_upper',
-            type: 'pulseSwitch',
-            x: 220,
-            y: 100,
-            dimension: 'umbra',
-            options: {
-                type: 'permanent'
-            }
-        },
-        */
-
-        // =====================================
-        // PRESSURE SWITCHES
-        // =====================================
-
-        {
-            id: 'pressure_aether',
-            type: 'pressureSwitch',
-            x: 120,
-            y: 110,
-            dimension: 'aether',
-            options: {
-                mode: 'momentary'
-            }
-        },
-
-        {
-            id: 'pressure_umbra',
-            type: 'pressureSwitch',
-            x: 350,
-            y: 175,
-            dimension: 'umbra',
-            options: {
-                mode: 'momentary'
+                mode: 'latch'
             }
         }
 
     ],
 
-    // =====================================
-    // MECHANISMS
-    // =====================================
+    goal: {
+
+        x: 440,
+        y: 210,
+
+        options: {
+            width: 12,
+            height: 40,
+            color: 0xffc857
+        }
+
+    },
 
     mechanisms: [
 
         {
-            id: 'main_wall_control_aether',
+            id: 'main_gate_control',
             type: 'switchGate',
-            target: 'main_wall',
-    
+            target: 'main_gate',
+
             conditions: {
                 mode: 'momentary',
-    
+
                 switches: [
-                    'pressure_aether'
-                ]
-            }
-        },
-    
-        {
-            id: 'main_wall_control_umbra',
-            type: 'switchGate',
-            target: 'main_wall',
-    
-            conditions: {
-                mode: 'momentary',
-    
-                switches: [
-                    'pressure_umbra'
+                    'pressure_main'
                 ]
             }
         }
-    
+
     ]
 
 };

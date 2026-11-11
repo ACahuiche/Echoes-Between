@@ -127,6 +127,15 @@ export default class MovementAbilities {
 
     }
 
+    hasPerformedDoubleJump() {
+
+        return (
+            this.abilityManager.isUnlocked('doubleJump') &&
+            this.jumpCount >= 2
+        );
+    
+    }
+
     handleDash(dashKey) {
 
         if (!this.abilityManager.isUnlocked('dimensionalDash')) {

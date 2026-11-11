@@ -10,7 +10,17 @@ const VALID_OBJECT_TYPES = [
     'wall',
     'dimensionalBarrier',
     'pulseSwitch',
-    'pressureSwitch'
+    'pressureSwitch',
+    'abilityPickup'
+];
+
+const VALID_ABILITIES = [
+    'doubleJump',
+    'dimensionalDash',
+    'wallJump',
+    'aetherGlide',
+    'dimensionalPulse',
+    'temporalEcho'
 ];
 
 const VALID_MECHANISM_TYPES = [
@@ -168,6 +178,18 @@ export default class LevelValidator {
                         );
                     }
 
+                }
+
+                if (object.type === 'abilityPickup') {
+
+                    if (!VALID_ABILITIES.includes(object.ability)) {
+                
+                        errors.push(
+                            `${prefix}: invalid or missing ability "${object.ability}"`
+                        );
+                
+                    }
+                
                 }
 
             });
