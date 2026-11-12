@@ -11,6 +11,7 @@ import level03 from '../levels/data/level03.js';
 import level04 from '../levels/data/level04.js';
 import level05 from '../levels/data/level05.js';
 import level06 from '../levels/data/level06.js';
+import level07 from '../levels/data/level07.js';
 
 export default class TestScene extends Phaser.Scene {
 
@@ -36,12 +37,13 @@ export default class TestScene extends Phaser.Scene {
             level03,
             level04,
             level05,
-            level06
+            level06,
+            level07
         ];
 
         // Determinar qué nivel cargar.
         this.currentLevelId =
-            data.levelId ?? 'level06';
+            data.levelId ?? 'level07';
 
         const levelData = this.levels.find(
             level => level.id === this.currentLevelId
@@ -380,6 +382,10 @@ export default class TestScene extends Phaser.Scene {
 
             aetherGlide: {
                 message: 'MANTÉN PRESIONADA C PARA PLANEAR Y CONTROLAR TU CAÍDA'
+            },
+
+            dimensionalPulse: {
+                message: 'PRESIONA F PARA ACTIVAR INTERRUPTORES A DISTANCIA'
             }
 
         };
