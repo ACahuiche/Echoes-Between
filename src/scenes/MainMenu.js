@@ -85,7 +85,7 @@ export default class MainMenu extends Phaser.Scene {
 
         // Instrucciones.
         this.add.text(
-            240, 250,
+            240, 240,
             '↑ ↓ SELECCIONAR     ENTER CONFIRMAR',
             {
                 fontFamily: 'Arial',
@@ -93,6 +93,14 @@ export default class MainMenu extends Phaser.Scene {
                 color: '#72e5e8'
             }
         ).setOrigin(0.5);
+
+        this.add.text(240, 258, 'POR ACAHUICHE', {
+            fontFamily: 'Arial',
+            fontSize: '9px',
+            color: '#687386',
+            letterSpacing: 1
+        })
+        .setOrigin(0.5);
 
         // Controles.
         this.input.keyboard.on(
