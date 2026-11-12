@@ -1,4 +1,3 @@
-
 import Phaser from 'phaser';
 
 import Player from '../entities/Player.js';
@@ -11,6 +10,7 @@ import level02 from '../levels/data/level02.js';
 import level03 from '../levels/data/level03.js';
 import level04 from '../levels/data/level04.js';
 import level05 from '../levels/data/level05.js';
+import level06 from '../levels/data/level06.js';
 
 export default class TestScene extends Phaser.Scene {
 
@@ -35,12 +35,13 @@ export default class TestScene extends Phaser.Scene {
             level02,
             level03,
             level04,
-            level05
+            level05,
+            level06
         ];
 
         // Determinar qué nivel cargar.
         this.currentLevelId =
-            data.levelId ?? 'level05';
+            data.levelId ?? 'level06';
 
         const levelData = this.levels.find(
             level => level.id === this.currentLevelId
@@ -375,6 +376,10 @@ export default class TestScene extends Phaser.Scene {
 
             dimensionalDash: {
                 message: 'PRESIONA CTRL PARA ATRAVESAR BARRERAS DIMENSIONALES'
+            },
+
+            aetherGlide: {
+                message: 'MANTÉN PRESIONADA C PARA PLANEAR Y CONTROLAR TU CAÍDA'
             }
 
         };
