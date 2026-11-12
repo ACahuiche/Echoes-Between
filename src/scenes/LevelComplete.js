@@ -19,7 +19,7 @@ export default class LevelComplete {
 
         this.title = scene.add.text(
             240, 55,
-            'LEVEL COMPLETED',
+            'NIVEL COMPLETADO',
             {
                 fontFamily: 'Arial',
                 fontSize: '25px',
@@ -40,7 +40,7 @@ export default class LevelComplete {
 
         this.timeText = scene.add.text(
             240, 145,
-            `TIME: ${data.time}`,
+            `TIEMPO: ${data.time}`,
             {
                 fontFamily: 'Arial',
                 fontSize: '22px',
@@ -52,8 +52,8 @@ export default class LevelComplete {
         this.nextLevelText = scene.add.text(
             240, 185,
             data.nextLevelName
-                ? `NEXT: ${data.nextLevelName}`
-                : 'END OF AVAILABLE LEVELS',
+                ? `SIGUIENTE NIVEL: ${data.nextLevelName}`
+                : 'FIN DE LOS NIVELES DISPONIBLES',
             {
                 fontFamily: 'Arial',
                 fontSize: '13px',
@@ -64,8 +64,8 @@ export default class LevelComplete {
         this.continueText = scene.add.text(
             240, 230,
             data.nextLevelName
-                ? 'PRESS ENTER TO CONTINUE'
-                : 'PRESS ENTER TO REPLAY',
+                ? 'PRESIONA ENTER PARA CONTINUAR'
+                : 'PRESIONA ENTER PARA REPETIR EL ULTIMO NIVEL',
             {
                 fontFamily: 'Arial',
                 fontSize: '13px',

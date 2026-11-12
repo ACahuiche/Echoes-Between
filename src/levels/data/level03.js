@@ -3,7 +3,7 @@ export default {
 
     id: 'level03',
 
-    name: 'The Second Leap',
+    name: 'El segundo impulso',
 
     playerSpawn: {
         x: 20,

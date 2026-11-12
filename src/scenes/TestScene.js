@@ -9,6 +9,7 @@ import LevelComplete from './LevelComplete.js';
 import level01 from '../levels/data/level01.js';
 import level02 from '../levels/data/level02.js';
 import level03 from '../levels/data/level03.js';
+import level04 from '../levels/data/level04.js';
 
 export default class TestScene extends Phaser.Scene {
 
@@ -31,7 +32,8 @@ export default class TestScene extends Phaser.Scene {
         this.levels = [
             level01,
             level02,
-            level03
+            level03,
+            level04
         ];
 
         // Determinar qué nivel cargar.
@@ -72,13 +74,14 @@ export default class TestScene extends Phaser.Scene {
 
         this.dimensionManager.setPlayer(this.player);
 
-        // Habilidades desbloqueadas para pruebas.
-        //this.player.abilityManager.unlock('dimensionalDash');
-        //this.player.abilityManager.unlock('wallJump');
-        //this.player.abilityManager.unlock('doubleJump');
-        //this.player.abilityManager.unlock('aetherGlide');
-        //this.player.abilityManager.unlock('dimensionalPulse');
-        //this.player.abilityManager.unlock('temporalEcho');
+        // Restaurar progreso de habilidades.
+        if (data.progress) {
+
+            this.player.abilityManager.restoreProgress(
+                data.progress
+            );
+
+        }
 
         // Construir nivel.
         this.levelBuilder = new LevelBuilder(
@@ -123,6 +126,11 @@ export default class TestScene extends Phaser.Scene {
         console.log(
             'Unlocked abilities:',
             this.player.abilityManager.getUnlockedAbilities()
+        );
+
+        console.log(
+            'Ability progress:',
+            this.player.abilityManager.getProgress()
         );
 
         console.log(
@@ -195,6 +203,10 @@ export default class TestScene extends Phaser.Scene {
             `${String(seconds).padStart(2, '0')}.` +
             `${String(centiseconds).padStart(2, '0')}`;
 
+        // Guardar progreso actual.
+        const progress =
+            this.player.abilityManager.getProgress();
+
         // Detener movimiento y desactivar al jugador.
         this.player.body.setVelocity(0, 0);
         this.player.body.setAcceleration(0, 0);
@@ -210,6 +222,7 @@ export default class TestScene extends Phaser.Scene {
 
         console.log('Level completed!');
         console.log(`Completion time: ${formattedTime}`);
+        console.log('Saved ability progress:', progress);
 
         // Mostrar pantalla de victoria.
         this.levelCompleteScreen = new LevelComplete(
@@ -225,7 +238,8 @@ export default class TestScene extends Phaser.Scene {
                     nextLevel?.id ?? this.currentLevelId;
 
                 this.scene.restart({
-                    levelId: destinationId
+                    levelId: destinationId,
+                    progress: progress
                 });
 
             }
@@ -242,7 +256,7 @@ export default class TestScene extends Phaser.Scene {
         if (levelId === 'level01') {
 
             this.showInitialTutorial(
-                'USE ARROW KEYS TO MOVE',
+                'USA LAS FLECHAS HACIA LOS LADOS PARA MOVERTE',
                 'Move'
             );
 
@@ -253,14 +267,11 @@ export default class TestScene extends Phaser.Scene {
         if (levelId === 'level02') {
 
             this.showInitialTutorial(
-                'PRESS SHIFT TO SWITCH BETWEEN AETHER AND UMBRA',
+                'PRESIONA SHIFT PARA CAMBIAR ENTRE AETHER Y UMBRA',
                 'Shift'
             );
 
         }
-
-        // Level 03 tiene un tutorial que aparece
-        // únicamente después de recoger el coleccionable.
 
     }
 
@@ -304,8 +315,7 @@ export default class TestScene extends Phaser.Scene {
 
         if (!this.tutorialText) return;
 
-        // Primera instrucción del nivel 01:
-        // esperar a que el jugador se mueva.
+        // Primera instrucción del nivel 01.
         if (this.tutorialKey === 'Move') {
 
             const moved =
@@ -314,9 +324,8 @@ export default class TestScene extends Phaser.Scene {
 
             if (!moved) return;
 
-            // Mostrar la siguiente instrucción.
             this.showInitialTutorial(
-                'PRESS SPACE TO JUMP',
+                'PRESIONA ESPACIO PARA SALTAR',
                 'Space'
             );
 
@@ -335,7 +344,7 @@ export default class TestScene extends Phaser.Scene {
 
         }
 
-        // Tutorial de cambio dimensional.
+        // Tutorial dimensional.
         if (this.tutorialKey === 'Shift') {
 
             if (event.key !== 'Shift') return;
@@ -352,7 +361,21 @@ export default class TestScene extends Phaser.Scene {
 
     showAbilityTutorial(abilityName) {
 
-        if (abilityName !== 'doubleJump') return;
+        const tutorials = {
+
+            doubleJump: {
+                message: 'PRESIONA ESPACIO EN EL AIRE PARA SALTAR DE NUEVO'
+            },
+
+            wallJump: {
+                message: 'PUEDES AGARRARTE A LAS PAREDES Y SALTAR SOBRE ELLAS'
+            }
+
+        };
+
+        const tutorial = tutorials[abilityName];
+
+        if (!tutorial) return;
 
         // Eliminar cualquier tutorial anterior.
         this.removeTutorial();
@@ -362,7 +385,7 @@ export default class TestScene extends Phaser.Scene {
         this.tutorialText = this.add.text(
             240,
             12,
-            'PRESS SPACE IN THE AIR TO JUMP AGAIN',
+            tutorial.message,
             {
                 fontFamily: 'Arial',
                 fontSize: '12px',
@@ -387,9 +410,23 @@ export default class TestScene extends Phaser.Scene {
 
         if (!this.tutorialAbility) return;
 
+        const movementAbilities =
+            this.player.movementAbilities;
+
         if (
             this.tutorialAbility === 'doubleJump' &&
-            this.player.movementAbilities.hasPerformedDoubleJump()
+            movementAbilities.hasPerformedDoubleJump()
+        ) {
+
+            this.removeTutorial();
+
+            return;
+
+        }
+
+        if (
+            this.tutorialAbility === 'wallJump' &&
+            movementAbilities.hasPerformedWallJump()
         ) {
 
             this.removeTutorial();

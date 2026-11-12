@@ -24,6 +24,7 @@ export default class AbilityManager {
         this.abilityLevels = {
             aetherGlide: 1
         };
+
     }
 
     isUnlocked(abilityName) {
@@ -36,6 +37,7 @@ export default class AbilityManager {
         }
 
         return this.unlockedAbilities[abilityName] === true;
+
     }
 
     unlock(abilityName) {
@@ -47,11 +49,13 @@ export default class AbilityManager {
             console.log(`Ability unlocked: ${abilityName}`);
 
             return true;
+
         }
 
         console.warn(`Unknown ability: ${abilityName}`);
 
         return false;
+
     }
 
     lock(abilityName) {
@@ -61,14 +65,17 @@ export default class AbilityManager {
             this.unlockedAbilities[abilityName] = false;
 
             return true;
+
         }
 
         return false;
+
     }
 
     getLevel(abilityName) {
 
         return this.abilityLevels[abilityName] ?? 1;
+
     }
 
     setLevel(abilityName, level) {
@@ -93,6 +100,7 @@ export default class AbilityManager {
         console.log(`${abilityName} upgraded to level ${level}`);
 
         return true;
+
     }
 
     upgrade(abilityName) {
@@ -114,12 +122,84 @@ export default class AbilityManager {
             abilityName,
             currentLevel + 1
         );
+
     }
 
     getUnlockedAbilities() {
 
         return Object.keys(this.unlockedAbilities)
             .filter(ability => this.isUnlocked(ability));
+
+    }
+
+    // --------------------------------------------------
+    // PROGRESO
+    // --------------------------------------------------
+
+    getProgress() {
+
+        return {
+
+            unlockedAbilities: {
+                ...this.unlockedAbilities
+            },
+
+            abilityLevels: {
+                ...this.abilityLevels
+            }
+
+        };
+
+    }
+
+    restoreProgress(progress) {
+
+        if (!progress || typeof progress !== 'object') {
+            return false;
+        }
+
+        // Restaurar habilidades desbloqueadas.
+        if (progress.unlockedAbilities) {
+
+            Object.keys(this.unlockedAbilities).forEach(ability => {
+
+                const unlocked =
+                    progress.unlockedAbilities[ability];
+
+                if (typeof unlocked === 'boolean') {
+
+                    this.unlockedAbilities[ability] = unlocked;
+
+                }
+
+            });
+
+        }
+
+        // Restaurar niveles de mejora.
+        if (progress.abilityLevels) {
+
+            Object.keys(this.abilityLevels).forEach(ability => {
+
+                const level = progress.abilityLevels[ability];
+
+                if (level !== undefined) {
+
+                    this.setLevel(ability, level);
+
+                }
+
+            });
+
+        }
+
+        console.log(
+            'Ability progress restored:',
+            this.getProgress()
+        );
+
+        return true;
+
     }
 
 }

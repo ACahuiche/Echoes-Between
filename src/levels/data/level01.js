@@ -3,7 +3,7 @@ export default {
 
     id: 'level01',
 
-    name: 'The First Shift',
+    name: 'El principio',
 
     playerSpawn: {
         x: 40,

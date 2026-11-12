@@ -3,7 +3,7 @@ export default {
 
     id: 'level02',
 
-    name: 'Between the Layers',
+    name: 'Entre las capas',
 
     playerSpawn: {
         x: 40,

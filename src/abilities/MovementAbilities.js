@@ -16,6 +16,10 @@ export default class MovementAbilities {
 
         this.canWallJump = true;
         this.isWallGrabbing = false;
+
+        // Registro de habilidades utilizadas.
+        this.performedWallJump = false;
+
     }
 
     handleWallGrab(direction) {
@@ -27,8 +31,11 @@ export default class MovementAbilities {
             body.onFloor() ||
             this.isDashing
         ) {
+
             this.isWallGrabbing = false;
+
             return false;
+
         }
 
         const touchingLeft =
@@ -48,13 +55,17 @@ export default class MovementAbilities {
             return false;
         }
 
-        const fallSpeed = ABILITY_CONFIG.wallJump.grabFallSpeed;
+        const fallSpeed =
+            ABILITY_CONFIG.wallJump.grabFallSpeed;
 
         if (body.velocity.y > fallSpeed) {
+
             body.setVelocityY(fallSpeed);
+
         }
 
         return true;
+
     }
 
     handleJump(jumpKey) {
@@ -91,6 +102,7 @@ export default class MovementAbilities {
         const hasWallJump =
             this.abilityManager.isUnlocked('wallJump');
 
+        // WALL JUMP.
         if (hasWallJump && this.canWallJump && wallDirection !== 0) {
 
             const config = ABILITY_CONFIG.wallJump;
@@ -108,9 +120,14 @@ export default class MovementAbilities {
             this.canWallJump = false;
             this.isWallGrabbing = false;
 
+            // Registrar que el jugador ya utilizó Wall Jump.
+            this.performedWallJump = true;
+
             return;
+
         }
 
+        // DOUBLE JUMP.
         const hasDoubleJump =
             this.abilityManager.isUnlocked('doubleJump');
 
@@ -123,6 +140,7 @@ export default class MovementAbilities {
             body.setVelocityY(this.player.jumpForce);
 
             this.jumpCount++;
+
         }
 
     }
@@ -133,7 +151,13 @@ export default class MovementAbilities {
             this.abilityManager.isUnlocked('doubleJump') &&
             this.jumpCount >= 2
         );
-    
+
+    }
+
+    hasPerformedWallJump() {
+
+        return this.performedWallJump;
+
     }
 
     handleDash(dashKey) {
@@ -184,7 +208,9 @@ export default class MovementAbilities {
                     this.player.scene.dimensionalBarriers || [];
 
                 barriers.forEach(barrier => {
+
                     barrier.resolvePlayerAfterDash();
+
                 });
 
                 this.dashTimer = null;
