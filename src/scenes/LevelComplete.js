@@ -51,9 +51,9 @@ export default class LevelComplete {
 
         this.nextLevelText = scene.add.text(
             240, 185,
-            data.nextLevelName
-                ? `SIGUIENTE NIVEL: ${data.nextLevelName}`
-                : 'FIN DE LOS NIVELES DISPONIBLES',
+            data.isFinalLevel
+                ? '¡HAS COMPLETADO EL TUTORIAL BETA!'
+                : `SIGUIENTE NIVEL: ${data.nextLevelName}`,
             {
                 fontFamily: 'Arial',
                 fontSize: '13px',
@@ -63,12 +63,12 @@ export default class LevelComplete {
 
         this.continueText = scene.add.text(
             240, 230,
-            data.nextLevelName
-                ? 'PRESIONA ENTER PARA CONTINUAR'
-                : 'PRESIONA ENTER PARA REPETIR EL ULTIMO NIVEL',
+            data.isFinalLevel
+                ? 'PRESIONA ENTER PARA REGRESAR AL MENU'
+                : 'PRESIONA ENTER PARA CONTINUAR',
             {
                 fontFamily: 'Arial',
-                fontSize: '13px',
+                fontSize: '12px',
                 color: '#f5c96b',
                 fontStyle: 'bold'
             }

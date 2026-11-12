@@ -232,25 +232,36 @@ export default class TestScene extends Phaser.Scene {
         console.log('Saved ability progress:', progress);
 
         // Mostrar pantalla de victoria.
+
+        // Mostrar pantalla de victoria.
         this.levelCompleteScreen = new LevelComplete(
             this,
             {
                 levelName: this.level.name,
                 time: formattedTime,
-                nextLevelName: nextLevel?.name ?? null
+                nextLevelName: nextLevel?.name ?? null,
+                isFinalLevel: nextLevel === null
             },
             () => {
 
-                const destinationId =
-                    nextLevel?.id ?? this.currentLevelId;
+                // Si terminó el último nivel, regresar al menú.
+                if (!nextLevel) {
 
+                    this.scene.start('MainMenu');
+
+                    return;
+
+                }
+
+                // Continuar al siguiente nivel.
                 this.scene.restart({
-                    levelId: destinationId,
+                    levelId: nextLevel.id,
                     progress: progress
                 });
 
             }
         );
+
 
     }
 

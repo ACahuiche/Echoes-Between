@@ -1,7 +1,11 @@
+
 import Phaser from 'phaser';
+
+import MainMenu from '../scenes/MainMenu.js';
 import TestScene from '../scenes/TestScene.js';
 
 const gameConfig = {
+
     type: Phaser.AUTO,
 
     width: 480,
@@ -24,12 +28,16 @@ const gameConfig = {
         }
     },
 
-    scene: [TestScene],
+    scene: [
+        MainMenu,
+        TestScene
+    ],
 
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
     }
+
 };
 
 export default gameConfig;
