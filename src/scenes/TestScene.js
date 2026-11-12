@@ -10,6 +10,7 @@ import level01 from '../levels/data/level01.js';
 import level02 from '../levels/data/level02.js';
 import level03 from '../levels/data/level03.js';
 import level04 from '../levels/data/level04.js';
+import level05 from '../levels/data/level05.js';
 
 export default class TestScene extends Phaser.Scene {
 
@@ -33,12 +34,13 @@ export default class TestScene extends Phaser.Scene {
             level01,
             level02,
             level03,
-            level04
+            level04,
+            level05
         ];
 
         // Determinar qué nivel cargar.
         this.currentLevelId =
-            data.levelId ?? 'level01';
+            data.levelId ?? 'level05';
 
         const levelData = this.levels.find(
             level => level.id === this.currentLevelId
@@ -369,6 +371,10 @@ export default class TestScene extends Phaser.Scene {
 
             wallJump: {
                 message: 'PUEDES AGARRARTE A LAS PAREDES Y SALTAR SOBRE ELLAS'
+            },
+
+            dimensionalDash: {
+                message: 'PRESIONA CTRL PARA ATRAVESAR BARRERAS DIMENSIONALES'
             }
 
         };
