@@ -8,6 +8,8 @@ export default class AbilityPickup {
         this.abilityName = abilityName;
         this.collected = false;
 
+        this.dimension = options.dimension ?? 'shared';
+
         const width = options.width ?? 16;
         const height = options.height ?? 20;
         const color = options.color ?? 0xffc857;
@@ -25,11 +27,17 @@ export default class AbilityPickup {
 
         scene.physics.add.existing(this.gameObject, true);
 
+        // Registrar el coleccionable en el sistema dimensional.
+        scene.dimensionManager.register(
+            this.gameObject,
+            this.dimension
+        );
+
         scene.physics.add.overlap(
             player.gameObject,
             this.gameObject,
             this.collect,
-            undefined,
+            () => this.gameObject.body.enable,
             this
         );
     }

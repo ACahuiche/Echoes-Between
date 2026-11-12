@@ -12,6 +12,7 @@ import level04 from '../levels/data/level04.js';
 import level05 from '../levels/data/level05.js';
 import level06 from '../levels/data/level06.js';
 import level07 from '../levels/data/level07.js';
+import level08 from '../levels/data/level08.js';
 
 export default class TestScene extends Phaser.Scene {
 
@@ -38,12 +39,13 @@ export default class TestScene extends Phaser.Scene {
             level04,
             level05,
             level06,
-            level07
+            level07,
+            level08
         ];
 
         // Determinar qué nivel cargar.
         this.currentLevelId =
-            data.levelId ?? 'level07';
+            data.levelId ?? 'level01';
 
         const levelData = this.levels.find(
             level => level.id === this.currentLevelId
@@ -386,6 +388,10 @@ export default class TestScene extends Phaser.Scene {
 
             dimensionalPulse: {
                 message: 'PRESIONA F PARA ACTIVAR INTERRUPTORES A DISTANCIA'
+            },
+
+            temporalEcho: {
+                message: 'PRESIONA Q PARA CREAR UN ECO QUE ACTIVE INTERRUPTORES'
             }
 
         };

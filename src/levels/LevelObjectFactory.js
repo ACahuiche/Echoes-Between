@@ -53,7 +53,10 @@ export default class LevelObjectFactory {
                     objectData.x,
                     objectData.y,
                     objectData.ability,
-                    objectData.options ?? {}
+                    {
+                        ...objectData.options,
+                        dimension
+                    }
                 );
 
                 break;
