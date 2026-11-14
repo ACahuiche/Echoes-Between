@@ -34,6 +34,16 @@ export default {
             dimension: 'shared'
         },
 
+        {
+            id: 'left_climbing_wall',
+            type: 'wall',
+            x: 8,
+            y: 135,
+            width: 16,
+            height: 270,
+            dimension: 'shared'
+        },
+
         // Plataforma elevada con el interruptor.
         {
             id: 'switch_platform',
@@ -62,7 +72,7 @@ export default {
             id: 'temporal_echo_pickup',
             type: 'abilityPickup',
             ability: 'temporalEcho',
-            x: 10,
+            x: 25,
             y: 20,
             dimension: 'umbra',
             options: {

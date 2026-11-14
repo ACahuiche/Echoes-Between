@@ -34,7 +34,7 @@ export default {
         },
 
         // Primera plataforma - Aether
-        {
+        /*{
             id: 'platform_01',
             type: 'platform',
             x: 125,
@@ -42,7 +42,7 @@ export default {
             width: 48,
             height: 12,
             dimension: 'aether'
-        },
+        },*/
 
         // Segunda plataforma - Umbra
         {
@@ -56,7 +56,7 @@ export default {
         },
 
         // Tercera plataforma - Aether
-        {
+        /*{
             id: 'platform_03',
             type: 'platform',
             x: 265,
@@ -64,7 +64,7 @@ export default {
             width: 48,
             height: 12,
             dimension: 'aether'
-        },
+        },*/
 
         // Cuarta plataforma - Umbra
         {

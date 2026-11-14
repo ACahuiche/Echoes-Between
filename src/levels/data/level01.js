@@ -45,7 +45,7 @@ export default {
             dimension: 'shared'
         },
 
-        {
+        /*{
             id: 'platform_02',
             type: 'platform',
             x: 205,
@@ -53,13 +53,13 @@ export default {
             width: 64,
             height: 12,
             dimension: 'shared'
-        },
+        },*/
 
         {
             id: 'platform_03',
             type: 'platform',
             x: 260,
-            y: 100,
+            y: 120,
             width: 64,
             height: 12,
             dimension: 'shared'
@@ -81,7 +81,7 @@ export default {
             id: 'pressure_main',
             type: 'pressureSwitch',
             x: 260,
-            y: 90,
+            y: 110,
             dimension: 'shared',
             options: {
                 mode: 'latch'

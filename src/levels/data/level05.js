@@ -34,6 +34,16 @@ export default {
             dimension: 'shared'
         },
 
+        {
+            id: 'left_climbing_wall',
+            type: 'wall',
+            x: 8,
+            y: 135,
+            width: 16,
+            height: 270,
+            dimension: 'shared'
+        },
+
         // Barrera dimensional que bloquea el camino.
         {
             id: 'dimensional_barrier',
@@ -51,7 +61,7 @@ export default {
             id: 'dimensional_dash_pickup',
             type: 'abilityPickup',
             ability: 'dimensionalDash',
-            x: 10,
+            x: 25,
             y: 25,
             dimension: 'shared',
             options: {

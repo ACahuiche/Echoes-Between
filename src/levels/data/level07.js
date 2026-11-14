@@ -54,9 +54,9 @@ export default {
             id: 'pulse_gate',
             type: 'wall',
             x: 240,
-            y: 135,
+            y: 46,
             width: 16,
-            height: 230,
+            height: 370,
             dimension: 'shared'
         },
 

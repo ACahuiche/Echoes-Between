@@ -13,6 +13,7 @@ import level05 from '../levels/data/level05.js';
 import level06 from '../levels/data/level06.js';
 import level07 from '../levels/data/level07.js';
 import level08 from '../levels/data/level08.js';
+import LevelFailed from './LevelFailed.js';
 
 export default class TestScene extends Phaser.Scene {
 
@@ -60,6 +61,8 @@ export default class TestScene extends Phaser.Scene {
         }
 
         this.isLevelCompleted = false;
+
+        this.isLevelFailed = false;
 
         // Limpiar referencias de interruptores anteriores.
         this.pressureSwitches = [];
@@ -149,9 +152,14 @@ export default class TestScene extends Phaser.Scene {
 
     update(time, delta) {
 
-        if (this.isLevelCompleted) return;
+        if (this.isLevelCompleted || this.isLevelFailed) return;
 
         this.player.update(delta);
+
+        if (this.player.gameObject.body.bottom > this.scale.height + 8) {
+            this.failLevel();
+            return;
+        }
 
         // Comprobar si el jugador completó el tutorial
         // de la habilidad recién desbloqueada.
@@ -263,6 +271,35 @@ export default class TestScene extends Phaser.Scene {
         );
 
 
+    }
+
+    failLevel() {
+
+        if (this.isLevelCompleted || this.isLevelFailed) return;
+    
+        this.isLevelFailed = true;
+    
+        const progress = this.player.abilityManager.getProgress();
+    
+        // Detener al jugador.
+        this.player.gameObject.body.enable = false;
+    
+        this.levelFailedScreen = new LevelFailed(
+            this,
+    
+            // Reintentar el nivel actual.
+            () => {
+                this.scene.restart({
+                    levelId: this.currentLevelId,
+                    progress: progress
+                });
+            },
+    
+            // Regresar al menú.
+            () => {
+                this.scene.start('MainMenu');
+            }
+        );
     }
 
     // --------------------------------------------------

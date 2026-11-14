@@ -30,7 +30,7 @@ export default class Player {
 
         this.body = this.gameObject.body;
 
-        this.body.setCollideWorldBounds(true);
+        this.body.setCollideWorldBounds(false);
         this.body.setMaxVelocity(this.speed, 1000);
         this.body.setDragX(this.friction);
 
