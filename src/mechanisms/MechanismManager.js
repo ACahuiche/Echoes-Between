@@ -14,7 +14,6 @@ export default class MechanismManager {
     }
 
     register(data) {
-
         const target = this.objectsById.get(data.target);
 
         if (!target) {
@@ -45,9 +44,7 @@ export default class MechanismManager {
 
     }
 
-
     update() {
-
         const targetStates = new Map();
 
         for (const mechanism of this.mechanisms) {
@@ -118,7 +115,6 @@ export default class MechanismManager {
 
 
     evaluateConditions(conditions) {
-
         const switches = conditions.switches.map(id =>
             this.objectsById.get(id)
         );
@@ -149,7 +145,6 @@ export default class MechanismManager {
     }
 
     applyState(mechanism, isOpen) {
-
         const gameObject = mechanism.gameObject;
 
         gameObject.mechanismOpen = isOpen;

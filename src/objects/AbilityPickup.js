@@ -27,7 +27,6 @@ export default class AbilityPickup {
 
         scene.physics.add.existing(this.gameObject, true);
 
-        // Registrar el coleccionable en el sistema dimensional.
         scene.dimensionManager.register(
             this.gameObject,
             this.dimension
@@ -43,7 +42,6 @@ export default class AbilityPickup {
     }
 
     collect() {
-
         if (this.collected) return;
 
         const abilityManager = this.player.abilityManager;
@@ -68,9 +66,6 @@ export default class AbilityPickup {
     }
 
     destroy() {
-
         this.gameObject.destroy();
-
     }
-
 }

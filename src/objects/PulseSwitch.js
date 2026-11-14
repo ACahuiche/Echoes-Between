@@ -5,17 +5,11 @@ export default class PulseSwitch {
     constructor(scene, x, y, width = 16, height = 16, options = {}) {
 
         this.scene = scene;
-
         this.type = options.type ?? 'permanent';
-
         this.duration = options.duration ?? 2000;
-
         this.dimension = options.dimension ?? 'shared';
-
         this.isActive = false;
-
         this.hasBeenActivated = false;
-
         this.activationTimer = null;
 
         this.gameObject = scene.add.rectangle(
@@ -27,7 +21,6 @@ export default class PulseSwitch {
         );
 
         this.gameObject.setStrokeStyle(2, 0xffffff);
-
         this.bounds = this.gameObject.getBounds();
 
         if (!this.scene.pulseSwitches) {
@@ -43,7 +36,6 @@ export default class PulseSwitch {
     }
 
     getDistanceFrom(x, y) {
-
         const bounds = this.gameObject.getBounds();
 
         const closestX = Phaser.Math.Clamp(
@@ -65,7 +57,6 @@ export default class PulseSwitch {
     }
 
     activate() {
-
         if (this.type === 'permanent' && this.isActive) {
             return;
         }
@@ -92,27 +83,21 @@ export default class PulseSwitch {
                 }
             );
         }
-
         console.log(`${this.type} switch activated`);
     }
 
     deactivate() {
-
         if (!this.isActive) {
             return;
         }
 
         this.isActive = false;
-
         this.gameObject.setFillStyle(0x777777);
-
         this.activationTimer = null;
-
         console.log(`${this.type} switch deactivated`);
     }
 
     destroy() {
-
         if (this.activationTimer) {
             this.activationTimer.remove();
         }
@@ -121,8 +106,6 @@ export default class PulseSwitch {
             this.scene.pulseSwitches.filter(
                 pulseSwitch => pulseSwitch !== this
             );
-
         this.gameObject.destroy();
     }
-
 }

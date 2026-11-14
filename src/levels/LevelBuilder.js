@@ -70,7 +70,6 @@ export default class LevelBuilder {
             levelData.mechanisms ?? []
         );
 
-        // Crear Goal si el nivel lo tiene.
         if (levelData.goal) {
 
             this.goal = new Goal(
@@ -123,7 +122,6 @@ export default class LevelBuilder {
     }
 
     configureDimensions(levelData) {
-
         const dimensions = levelData.dimensions;
 
         this.dimensionManager.currentDimension =
@@ -145,5 +143,4 @@ export default class LevelBuilder {
         );
 
     }
-
 }

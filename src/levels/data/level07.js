@@ -22,8 +22,6 @@ export default {
     },
 
     objects: [
-
-        // Suelo principal.
         {
             id: 'main_ground',
             type: 'platform',
@@ -33,8 +31,6 @@ export default {
             height: 40,
             dimension: 'shared'
         },
-
-        // Coleccionable que desbloquea Dimensional Pulse.
         {
             id: 'dimensional_pulse_pickup',
             type: 'abilityPickup',
@@ -48,8 +44,6 @@ export default {
                 color: 0xffc857
             }
         },
-
-        // Pared que bloquea el camino.
         {
             id: 'pulse_gate',
             type: 'wall',
@@ -59,8 +53,6 @@ export default {
             height: 370,
             dimension: 'shared'
         },
-
-        // Interruptor permanente detrás de la pared.
         {
             id: 'pulse_switch_main',
             type: 'pulseSwitch',
@@ -73,8 +65,6 @@ export default {
         }
 
     ],
-
-    // Goal al otro lado de la pared.
     goal: {
 
         x: 440,
@@ -89,7 +79,6 @@ export default {
     },
 
     mechanisms: [
-
         {
             id: 'pulse_gate_control',
             type: 'switchGate',
@@ -103,7 +92,5 @@ export default {
                 ]
             }
         }
-
     ]
-
 };

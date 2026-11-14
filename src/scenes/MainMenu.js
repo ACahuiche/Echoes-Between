@@ -12,12 +12,10 @@ export default class MainMenu extends Phaser.Scene {
         this.selectedOption = 0;
         this.showingMessage = false;
 
-        // Fondo.
         this.add.rectangle(
             240, 135, 480, 270, 0x101522
         );
 
-        // Decoración dimensional.
         this.add.rectangle(
             115, 135, 2, 180, 0x38c6c8, 0.35
         );
@@ -26,7 +24,6 @@ export default class MainMenu extends Phaser.Scene {
             365, 135, 2, 180, 0x9b59ff, 0.35
         );
 
-        // Título.
         this.add.text(
             240, 65,
             'ECHOES',
@@ -59,7 +56,6 @@ export default class MainMenu extends Phaser.Scene {
             }
         ).setOrigin(0.5);
 
-        // Opciones.
         this.playText = this.add.text(
             240, 180,
             'JUGAR',
@@ -83,7 +79,6 @@ export default class MainMenu extends Phaser.Scene {
 
         this.updateSelection();
 
-        // Instrucciones.
         this.add.text(
             240, 240,
             '↑ ↓ SELECCIONAR     ENTER CONFIRMAR',
@@ -102,7 +97,6 @@ export default class MainMenu extends Phaser.Scene {
         })
         .setOrigin(0.5);
 
-        // Controles.
         this.input.keyboard.on(
             'keydown-UP',
             this.previousOption,
@@ -124,27 +118,20 @@ export default class MainMenu extends Phaser.Scene {
     }
 
     previousOption() {
-
         if (this.showingMessage) return;
 
         this.selectedOption = 0;
-
         this.updateSelection();
-
     }
 
     nextOption() {
-
         if (this.showingMessage) return;
 
         this.selectedOption = 1;
-
         this.updateSelection();
-
     }
 
     updateSelection() {
-
         this.playText.setStyle({
             color: this.selectedOption === 0
                 ? '#f5c96b'
@@ -176,41 +163,28 @@ export default class MainMenu extends Phaser.Scene {
                 ? '▶ TUTORIAL BETA'
                 : 'TUTORIAL BETA'
         );
-
     }
 
     confirmSelection() {
-
         if (this.showingMessage) {
-
             this.scene.restart();
-
             return;
-
         }
 
-        // Jugar.
         if (this.selectedOption === 0) {
-
             this.showConstructionMessage();
-
             return;
-
         }
 
-        // Tutorial Beta.
         if (this.selectedOption === 1) {
 
             this.scene.start('TestScene', {
                 levelId: 'level01'
             });
-
         }
-
     }
 
     showConstructionMessage() {
-
         this.showingMessage = true;
 
         this.messageOverlay = this.add.rectangle(
@@ -247,7 +221,5 @@ export default class MainMenu extends Phaser.Scene {
                 color: '#72e5e8'
             }
         ).setOrigin(0.5).setDepth(11);
-
     }
-
 }

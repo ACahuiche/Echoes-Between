@@ -21,8 +21,6 @@ export default {
     },
 
     objects: [
-
-        // Zona inicial
         {
             id: 'starting_ground',
             type: 'platform',
@@ -32,19 +30,6 @@ export default {
             height: 40,
             dimension: 'shared'
         },
-
-        // Primera plataforma - Aether
-        /*{
-            id: 'platform_01',
-            type: 'platform',
-            x: 125,
-            y: 210,
-            width: 48,
-            height: 12,
-            dimension: 'aether'
-        },*/
-
-        // Segunda plataforma - Umbra
         {
             id: 'platform_02',
             type: 'platform',
@@ -54,19 +39,6 @@ export default {
             height: 12,
             dimension: 'umbra'
         },
-
-        // Tercera plataforma - Aether
-        /*{
-            id: 'platform_03',
-            type: 'platform',
-            x: 265,
-            y: 140,
-            width: 48,
-            height: 12,
-            dimension: 'aether'
-        },*/
-
-        // Cuarta plataforma - Umbra
         {
             id: 'platform_04',
             type: 'platform',
@@ -76,8 +48,6 @@ export default {
             height: 12,
             dimension: 'umbra'
         },
-
-        // Interruptor permanente
         {
             id: 'pressure_main',
             type: 'pressureSwitch',
@@ -88,8 +58,6 @@ export default {
                 mode: 'latch'
             }
         },
-
-        // Puerta que bloquea el camino
         {
             id: 'main_gate',
             type: 'wall',
@@ -99,8 +67,6 @@ export default {
             height: 220,
             dimension: 'shared'
         },
-
-        // Zona segura después de la puerta
         {
             id: 'exit_ground',
             type: 'platform',

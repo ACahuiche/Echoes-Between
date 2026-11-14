@@ -22,8 +22,6 @@ export default {
     },
 
     objects: [
-
-        // Plataforma principal izquierda.
         {
             id: 'starting_platform',
             type: 'platform',
@@ -33,7 +31,6 @@ export default {
             height: 40,
             dimension: 'shared'
         },
-
         {
             id: 'left_climbing_wall',
             type: 'wall',
@@ -43,8 +40,6 @@ export default {
             height: 270,
             dimension: 'shared'
         },
-
-        // Plataforma elevada con el interruptor.
         {
             id: 'switch_platform',
             type: 'platform',
@@ -54,8 +49,6 @@ export default {
             height: 12,
             dimension: 'shared'
         },
-
-        // Interruptor que debe permanecer presionado.
         {
             id: 'echo_pressure_switch',
             type: 'pressureSwitch',
@@ -66,8 +59,6 @@ export default {
                 mode: 'momentary'
             }
         },
-
-        // Coleccionable que desbloquea Temporal Echo.
         {
             id: 'temporal_echo_pickup',
             type: 'abilityPickup',
@@ -81,9 +72,6 @@ export default {
                 color: 0xffc857
             }
         },
-
-        // Pared central que se abre mientras
-        // el interruptor permanece presionado.
         {
             id: 'echo_gate',
             type: 'wall',
@@ -93,8 +81,6 @@ export default {
             height: 230,
             dimension: 'shared'
         },
-
-        // Plataforma derecha para llegar al Goal.
         {
             id: 'goal_platform',
             type: 'platform',
@@ -104,9 +90,7 @@ export default {
             height: 40,
             dimension: 'shared'
         }
-
     ],
-
     goal: {
 
         x: 430,
@@ -119,9 +103,7 @@ export default {
         }
 
     },
-
     mechanisms: [
-
         {
             id: 'echo_gate_control',
             type: 'switchGate',
@@ -135,7 +117,5 @@ export default {
                 ]
             }
         }
-
     ]
-
 };

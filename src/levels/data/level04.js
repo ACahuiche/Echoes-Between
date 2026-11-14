@@ -22,8 +22,6 @@ export default {
     },
 
     objects: [
-
-        // Suelo principal.
         {
             id: 'starting_ground',
             type: 'platform',
@@ -33,8 +31,6 @@ export default {
             height: 40,
             dimension: 'shared'
         },
-
-        // Coleccionable que desbloquea Wall Jump.
         {
             id: 'wall_jump_pickup',
             type: 'abilityPickup',
@@ -48,8 +44,6 @@ export default {
                 color: 0xffc857
             }
         },
-
-        // Pared vertical del extremo derecho.
         {
             id: 'climbing_wall',
             type: 'wall',
@@ -61,8 +55,6 @@ export default {
         }
 
     ],
-
-    // Goal suspendido del techo, pegado a la pared.
     goal: {
 
         x: 440,
@@ -77,5 +69,4 @@ export default {
     },
 
     mechanisms: []
-
 };

@@ -16,8 +16,6 @@ export default class MovementAbilities {
 
         this.canWallJump = true;
         this.isWallGrabbing = false;
-
-        // Registro de habilidades utilizadas.
         this.performedWallJump = false;
 
     }
@@ -31,52 +29,39 @@ export default class MovementAbilities {
             body.onFloor() ||
             this.isDashing
         ) {
-
             this.isWallGrabbing = false;
-
             return false;
-
         }
 
-        const touchingLeft =
-            body.blocked.left || body.touching.left;
+        const touchingLeft = body.blocked.left || body.touching.left;
 
-        const touchingRight =
-            body.blocked.right || body.touching.right;
+        const touchingRight = body.blocked.right || body.touching.right;
 
         const pressingTowardWall =
             (touchingLeft && direction === -1) ||
             (touchingRight && direction === 1);
 
-        this.isWallGrabbing =
-            this.canWallJump && pressingTowardWall;
+        this.isWallGrabbing = this.canWallJump && pressingTowardWall;
 
         if (!this.isWallGrabbing) {
             return false;
         }
 
-        const fallSpeed =
-            ABILITY_CONFIG.wallJump.grabFallSpeed;
+        const fallSpeed = ABILITY_CONFIG.wallJump.grabFallSpeed;
 
         if (body.velocity.y > fallSpeed) {
-
             body.setVelocityY(fallSpeed);
-
         }
-
         return true;
-
     }
 
     handleJump(jumpKey) {
 
         const body = this.player.body;
 
-        const touchingLeft =
-            body.blocked.left || body.touching.left;
+        const touchingLeft = body.blocked.left || body.touching.left;
 
-        const touchingRight =
-            body.blocked.right || body.touching.right;
+        const touchingRight = body.blocked.right || body.touching.right;
 
         const wallDirection = touchingLeft
             ? 1
@@ -85,83 +70,61 @@ export default class MovementAbilities {
                 : 0;
 
         if (body.onFloor()) {
-
             this.jumpCount = 0;
             this.canWallJump = true;
 
         } else if (wallDirection === 0) {
-
             this.canWallJump = true;
-
         }
 
         if (!Phaser.Input.Keyboard.JustDown(jumpKey)) {
             return;
         }
 
-        const hasWallJump =
-            this.abilityManager.isUnlocked('wallJump');
+        const hasWallJump = this.abilityManager.isUnlocked('wallJump');
 
-        // WALL JUMP.
         if (hasWallJump && this.canWallJump && wallDirection !== 0) {
-
             const config = ABILITY_CONFIG.wallJump;
-
             body.setAccelerationX(0);
-
             body.setVelocity(
                 wallDirection * config.horizontalForce,
                 config.verticalForce
             );
 
             this.player.facing = wallDirection;
-
             this.jumpCount = 1;
             this.canWallJump = false;
             this.isWallGrabbing = false;
-
-            // Registrar que el jugador ya utilizó Wall Jump.
             this.performedWallJump = true;
 
             return;
-
         }
 
-        // DOUBLE JUMP.
-        const hasDoubleJump =
-            this.abilityManager.isUnlocked('doubleJump');
+        const hasDoubleJump = this.abilityManager.isUnlocked('doubleJump');
 
         const maxJumps = hasDoubleJump
             ? ABILITY_CONFIG.doubleJump.maxJumps
             : 1;
 
         if (this.jumpCount < maxJumps) {
-
             body.setVelocityY(this.player.jumpForce);
-
             this.jumpCount++;
-
         }
 
     }
 
     hasPerformedDoubleJump() {
-
         return (
             this.abilityManager.isUnlocked('doubleJump') &&
             this.jumpCount >= 2
         );
-
     }
 
     hasPerformedWallJump() {
-
         return this.performedWallJump;
-
     }
 
     handleDash(dashKey) {
-
         if (!this.abilityManager.isUnlocked('dimensionalDash')) {
             return;
         }
@@ -185,18 +148,13 @@ export default class MovementAbilities {
 
         body.setMaxVelocity(config.speed, 1000);
 
-        body.setVelocityX(
-            this.player.facing * config.speed
-        );
+        body.setVelocityX(this.player.facing * config.speed);
 
         this.dashTimer = this.player.scene.time.delayedCall(
             config.duration,
             () => {
-
                 this.isDashing = false;
-
                 body.setVelocityX(0);
-
                 body.setDragX(this.player.friction);
 
                 body.setMaxVelocity(
@@ -204,20 +162,14 @@ export default class MovementAbilities {
                     1000
                 );
 
-                const barriers =
-                    this.player.scene.dimensionalBarriers || [];
+                const barriers = this.player.scene.dimensionalBarriers || [];
 
                 barriers.forEach(barrier => {
-
                     barrier.resolvePlayerAfterDash();
-
                 });
 
                 this.dashTimer = null;
-
             }
         );
-
     }
-
 }

@@ -83,13 +83,10 @@ export default class LevelComplete {
     }
 
     handleContinue() {
-
         if (!this.active) return;
 
         this.active = false;
-
         this.onContinue();
-
     }
 
 }

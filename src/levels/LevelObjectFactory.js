@@ -139,5 +139,4 @@ export default class LevelObjectFactory {
 
         return gameObject;
     }
-
 }

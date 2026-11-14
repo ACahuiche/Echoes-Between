@@ -22,9 +22,6 @@ export default {
     },
 
     objects: [
-
-        // Plataforma elevada inicial.
-        // El espacio con el techo es reducido para impedir saltar.
         {
             id: 'starting_platform',
             type: 'platform',
@@ -34,8 +31,6 @@ export default {
             height: 16,
             dimension: 'shared'
         },
-
-        // Coleccionable que desbloquea Aether Glide.
         {
             id: 'aether_glide_pickup',
             type: 'abilityPickup',
@@ -49,8 +44,6 @@ export default {
                 color: 0xffc857
             }
         },
-
-        // Plataforma de aterrizaje, bastante alejada.
         {
             id: 'landing_platform',
             type: 'platform',
@@ -60,10 +53,7 @@ export default {
             height: 16,
             dimension: 'umbra'
         }
-
     ],
-
-    // Goal situado sobre la plataforma inferior.
     goal: {
 
         x: 430,
@@ -76,7 +66,5 @@ export default {
         }
 
     },
-
     mechanisms: []
-
 };

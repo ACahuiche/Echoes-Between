@@ -25,7 +25,6 @@ export default class TemporalEcho {
             return;
         }
 
-        // Solo puede existir un Echo activo.
         if (this.gameObject) {
             return;
         }

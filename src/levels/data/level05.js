@@ -22,8 +22,6 @@ export default {
     },
 
     objects: [
-
-        // Suelo principal de todo el nivel.
         {
             id: 'main_ground',
             type: 'platform',
@@ -33,7 +31,6 @@ export default {
             height: 40,
             dimension: 'shared'
         },
-
         {
             id: 'left_climbing_wall',
             type: 'wall',
@@ -43,8 +40,6 @@ export default {
             height: 270,
             dimension: 'shared'
         },
-
-        // Barrera dimensional que bloquea el camino.
         {
             id: 'dimensional_barrier',
             type: 'dimensionalBarrier',
@@ -54,9 +49,6 @@ export default {
             height: 230,
             dimension: 'shared'
         },
-
-        // Coleccionable situado en la parte superior
-        // izquierda de la barrera.
         {
             id: 'dimensional_dash_pickup',
             type: 'abilityPickup',
@@ -72,8 +64,6 @@ export default {
         }
 
     ],
-
-    // Goal al otro lado de la barrera.
     goal: {
 
         x: 430,
@@ -86,7 +76,5 @@ export default {
         }
 
     },
-
     mechanisms: []
-
 };

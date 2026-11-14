@@ -24,16 +24,9 @@ export default class PressureSwitch {
             );
         }
 
-        // Estado físico.
         this.isPressed = false;
-
-        // Estado lógico.
         this.isActive = false;
-
-        // Registro histórico de activación.
         this.hasBeenActivated = false;
-
-        // Evita alternancias mientras se mantiene presionado.
         this.wasPressed = false;
 
         this.gameObject = scene.add.rectangle(
@@ -73,8 +66,6 @@ export default class PressureSwitch {
             this.isPressed = false;
             this.wasPressed = false;
 
-            // Los momentáneos dejan de funcionar
-            // al abandonar su dimensión.
             if (this.mode === 'momentary') {
                 this.isActive = false;
             }
@@ -144,7 +135,6 @@ export default class PressureSwitch {
 
         }
 
-        // El modo momentáneo sigue el estado físico.
         if (this.mode === 'momentary') {
             this.isActive = isPressed;
         }
@@ -160,9 +150,7 @@ export default class PressureSwitch {
         let color = 0x777777;
 
         if (this.isActive) {
-
             switch (this.mode) {
-
                 case 'momentary':
                     color = 0x65cfff;
                     break;
@@ -174,24 +162,15 @@ export default class PressureSwitch {
                 case 'latch':
                     color = 0xffc857;
                     break;
-
             }
-
         }
-
         this.gameObject.setFillStyle(color);
-
     }
 
     destroy() {
-
-        this.scene.pressureSwitches =
-            this.scene.pressureSwitches.filter(
+        this.scene.pressureSwitches = this.scene.pressureSwitches.filter(
                 pressureSwitch => pressureSwitch !== this
             );
-
         this.gameObject.destroy();
-
     }
-
 }

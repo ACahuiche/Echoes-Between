@@ -22,8 +22,6 @@ export default {
     },
 
     objects: [
-
-        // Suelo inicial.
         {
             id: 'starting_ground',
             type: 'platform',
@@ -33,18 +31,6 @@ export default {
             height: 40,
             dimension: 'shared'
         },
-
-        // Plataformas alcanzables con salto normal.
-        /*{
-            id: 'platform_01',
-            type: 'platform',
-            x: 70,
-            y: 205,
-            width: 48,
-            height: 12,
-            dimension: 'shared'
-        },*/
-
         {
             id: 'platform_02',
             type: 'platform',
@@ -54,7 +40,6 @@ export default {
             height: 12,
             dimension: 'shared'
         },
-
         {
             id: 'platform_03',
             type: 'platform',
@@ -64,8 +49,6 @@ export default {
             height: 12,
             dimension: 'shared'
         },
-
-        // Coleccionable de doble salto.
         {
             id: 'double_jump_pickup',
             type: 'abilityPickup',
@@ -79,19 +62,6 @@ export default {
                 color: 0xffc857
             }
         },
-
-        // Zona de transición.
-        /*{
-            id: 'platform_04',
-            type: 'platform',
-            x: 290,
-            y: 245,
-            width: 48,
-            height: 12,
-            dimension: 'shared'
-        },*/
-
-        // Plataforma elevada: requiere doble salto.
         {
             id: 'final_platform',
             type: 'platform',
@@ -101,7 +71,6 @@ export default {
             height: 12,
             dimension: 'shared'
         }
-
     ],
 
     goal: {
@@ -116,7 +85,5 @@ export default {
         }
 
     },
-
     mechanisms: []
-
 };

@@ -132,10 +132,6 @@ export default class AbilityManager {
 
     }
 
-    // --------------------------------------------------
-    // PROGRESO
-    // --------------------------------------------------
-
     getProgress() {
 
         return {
@@ -158,7 +154,6 @@ export default class AbilityManager {
             return false;
         }
 
-        // Restaurar habilidades desbloqueadas.
         if (progress.unlockedAbilities) {
 
             Object.keys(this.unlockedAbilities).forEach(ability => {
@@ -176,7 +171,6 @@ export default class AbilityManager {
 
         }
 
-        // Restaurar niveles de mejora.
         if (progress.abilityLevels) {
 
             Object.keys(this.abilityLevels).forEach(ability => {

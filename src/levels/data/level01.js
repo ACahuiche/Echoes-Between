@@ -22,8 +22,6 @@ export default {
     },
 
     objects: [
-
-        // Suelo
         {
             id: 'main_ground',
             type: 'platform',
@@ -33,8 +31,6 @@ export default {
             height: 40,
             dimension: 'shared'
         },
-
-        // Plataformas para aprender a saltar
         {
             id: 'platform_01',
             type: 'platform',
@@ -44,17 +40,6 @@ export default {
             height: 12,
             dimension: 'shared'
         },
-
-        /*{
-            id: 'platform_02',
-            type: 'platform',
-            x: 205,
-            y: 170,
-            width: 64,
-            height: 12,
-            dimension: 'shared'
-        },*/
-
         {
             id: 'platform_03',
             type: 'platform',
@@ -64,8 +49,6 @@ export default {
             height: 12,
             dimension: 'shared'
         },
-
-        // Puerta
         {
             id: 'main_gate',
             type: 'wall',
@@ -75,8 +58,6 @@ export default {
             height: 220,
             dimension: 'shared'
         },
-
-        // Interruptor permanente
         {
             id: 'pressure_main',
             type: 'pressureSwitch',

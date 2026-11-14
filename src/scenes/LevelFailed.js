@@ -79,7 +79,6 @@ export default class LevelFailed {
     }
 
     previousOption() {
-
         if (!this.active) return;
 
         this.selectedOption = 0;
@@ -87,7 +86,6 @@ export default class LevelFailed {
     }
 
     nextOption() {
-
         if (!this.active) return;
 
         this.selectedOption = 1;
@@ -95,7 +93,6 @@ export default class LevelFailed {
     }
 
     updateSelection() {
-
         this.retryText.setText(
             this.selectedOption === 0
                 ? '▶ REINTENTAR NIVEL'
@@ -118,11 +115,9 @@ export default class LevelFailed {
     }
 
     confirmSelection() {
-
         if (!this.active) return;
 
         this.active = false;
-
         this.destroy();
 
         if (this.selectedOption === 0) {
@@ -133,7 +128,6 @@ export default class LevelFailed {
     }
 
     destroy() {
-
         if (this.keyboard) {
             this.keyboard.off('keydown-UP', this.handleUp);
             this.keyboard.off('keydown-DOWN', this.handleDown);

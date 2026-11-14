@@ -6,11 +6,8 @@ export default class DimensionManager {
     constructor(scene) {
 
         this.scene = scene;
-
         this.currentDimension = 'aether';
-
         this.player = null;
-
         this.objects = [];
 
         this.backgrounds = {
@@ -34,7 +31,6 @@ export default class DimensionManager {
             dimension
         };
 
-        // Indica si algún mecanismo ha abierto este objeto.
         if (gameObject.mechanismOpen === undefined) {
             gameObject.mechanismOpen = false;
         }
@@ -50,18 +46,13 @@ export default class DimensionManager {
 
         const gameObject = entry.gameObject;
 
-        // Comprueba si el objeto pertenece a la dimensión actual.
         const isDimensionActive =
             entry.dimension === 'shared' ||
             entry.dimension === this.currentDimension;
 
-        // Comprueba si algún mecanismo abrió el objeto.
         const isOpen = gameObject.mechanismOpen ?? false;
 
-        // El objeto solo está disponible si pertenece
-        // a la dimensión actual y no está abierto.
-        const isAvailable =
-            isDimensionActive && !isOpen;
+        const isAvailable = isDimensionActive && !isOpen;
 
         gameObject.setVisible(isAvailable);
 
@@ -134,7 +125,6 @@ export default class DimensionManager {
 
             const gameObject = entry.gameObject;
 
-            // Los objetos abiertos ya no representan obstáculos.
             if (gameObject.mechanismOpen) {
                 continue;
             }

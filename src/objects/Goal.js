@@ -32,20 +32,14 @@ export default class Goal {
     }
 
     handleOverlap() {
-
         if (this.reached) return;
 
         this.reached = true;
-
         this.gameObject.setFillStyle(0xffffff);
-
         this.scene.events.emit('goal-reached');
     }
 
     destroy() {
-
         this.gameObject.destroy();
-
     }
-
 }

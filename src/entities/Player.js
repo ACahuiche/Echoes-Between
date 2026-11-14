@@ -10,13 +10,11 @@ export default class Player {
     constructor(scene, x, y) {
 
         this.scene = scene;
-
         this.speed = 180;
         this.acceleration = 1400;
         this.friction = 1800;
         this.jumpForce = -400;
-
-        this.facing = 1;
+        this.facing = 1; // Derecha 1 | Izquierda -1
 
         this.gameObject = scene.add.rectangle(
             x,
@@ -76,7 +74,6 @@ export default class Player {
 
     update(delta = this.scene.game.loop.delta) {
 
-        // Cambio dimensional: SHIFT.
         this.scene.dimensionManager?.handleInput(
             this.keys.shift
         );
@@ -109,14 +106,11 @@ export default class Player {
     handleMovement() {
 
         const body = this.body;
-
         let direction = 0;
 
-        const movingLeft =
-            this.cursors.left.isDown || this.keys.a.isDown;
+        const movingLeft = this.cursors.left.isDown || this.keys.a.isDown;
 
-        const movingRight =
-            this.cursors.right.isDown || this.keys.d.isDown;
+        const movingRight = this.cursors.right.isDown || this.keys.d.isDown;
 
         if (movingLeft && !movingRight) {
             direction = -1;
