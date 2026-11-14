@@ -93,6 +93,8 @@ export default class TestScene extends Phaser.Scene {
 
         }
 
+        this.levelStartProgress = this.player.abilityManager.getProgress();
+
         // Construir nivel.
         this.levelBuilder = new LevelBuilder(
             this,
@@ -279,7 +281,9 @@ export default class TestScene extends Phaser.Scene {
     
         this.isLevelFailed = true;
     
-        const progress = this.player.abilityManager.getProgress();
+        // Recuperar el progreso inicial del nivel,
+        // descartando las habilidades recogidas durante este intento.
+        const progress = this.levelStartProgress;
     
         // Detener al jugador.
         this.player.gameObject.body.enable = false;
