@@ -1,3 +1,4 @@
+
 import Phaser from 'phaser';
 import { ABILITY_CONFIG } from '../config/abilityConfig.js';
 
@@ -13,18 +14,89 @@ export default class MovementAbilities {
         this.isDashing = false;
         this.dashTimer = null;
 
-        this.isGliding = false;
+        this.canWallJump = true;
+        this.isWallGrabbing = false;
+        this.performedWallJump = false;
+
+    }
+
+    handleWallGrab(direction) {
+
+        const body = this.player.body;
+
+        if (
+            !this.abilityManager.isUnlocked('wallJump') ||
+            body.onFloor() ||
+            this.isDashing
+        ) {
+            this.isWallGrabbing = false;
+            return false;
+        }
+
+        const touchingLeft = body.blocked.left || body.touching.left;
+
+        const touchingRight = body.blocked.right || body.touching.right;
+
+        const pressingTowardWall =
+            (touchingLeft && direction === -1) ||
+            (touchingRight && direction === 1);
+
+        this.isWallGrabbing = this.canWallJump && pressingTowardWall;
+
+        if (!this.isWallGrabbing) {
+            return false;
+        }
+
+        const fallSpeed = ABILITY_CONFIG.wallJump.grabFallSpeed;
+
+        if (body.velocity.y > fallSpeed) {
+            body.setVelocityY(fallSpeed);
+        }
+        return true;
     }
 
     handleJump(jumpKey) {
 
         const body = this.player.body;
 
+        const touchingLeft = body.blocked.left || body.touching.left;
+
+        const touchingRight = body.blocked.right || body.touching.right;
+
+        const wallDirection = touchingLeft
+            ? 1
+            : touchingRight
+                ? -1
+                : 0;
+
         if (body.onFloor()) {
             this.jumpCount = 0;
+            this.canWallJump = true;
+
+        } else if (wallDirection === 0) {
+            this.canWallJump = true;
         }
 
         if (!Phaser.Input.Keyboard.JustDown(jumpKey)) {
+            return;
+        }
+
+        const hasWallJump = this.abilityManager.isUnlocked('wallJump');
+
+        if (hasWallJump && this.canWallJump && wallDirection !== 0) {
+            const config = ABILITY_CONFIG.wallJump;
+            body.setAccelerationX(0);
+            body.setVelocity(
+                wallDirection * config.horizontalForce,
+                config.verticalForce
+            );
+
+            this.player.facing = wallDirection;
+            this.jumpCount = 1;
+            this.canWallJump = false;
+            this.isWallGrabbing = false;
+            this.performedWallJump = true;
+
             return;
         }
 
@@ -35,11 +107,69 @@ export default class MovementAbilities {
             : 1;
 
         if (this.jumpCount < maxJumps) {
-
             body.setVelocityY(this.player.jumpForce);
-
             this.jumpCount++;
         }
+
     }
 
+    hasPerformedDoubleJump() {
+        return (
+            this.abilityManager.isUnlocked('doubleJump') &&
+            this.jumpCount >= 2
+        );
+    }
+
+    hasPerformedWallJump() {
+        return this.performedWallJump;
+    }
+
+    handleDash(dashKey) {
+        if (!this.abilityManager.isUnlocked('dimensionalDash')) {
+            return;
+        }
+
+        if (this.isDashing) {
+            return;
+        }
+
+        if (!Phaser.Input.Keyboard.JustDown(dashKey)) {
+            return;
+        }
+
+        const body = this.player.body;
+        const config = ABILITY_CONFIG.dimensionalDash;
+
+        this.isDashing = true;
+        this.isWallGrabbing = false;
+
+        body.setAccelerationX(0);
+        body.setDragX(0);
+
+        body.setMaxVelocity(config.speed, 1000);
+
+        body.setVelocityX(this.player.facing * config.speed);
+
+        this.dashTimer = this.player.scene.time.delayedCall(
+            config.duration,
+            () => {
+                this.isDashing = false;
+                body.setVelocityX(0);
+                body.setDragX(this.player.friction);
+
+                body.setMaxVelocity(
+                    this.player.speed,
+                    1000
+                );
+
+                const barriers = this.player.scene.dimensionalBarriers || [];
+
+                barriers.forEach(barrier => {
+                    barrier.resolvePlayerAfterDash();
+                });
+
+                this.dashTimer = null;
+            }
+        );
+    }
 }

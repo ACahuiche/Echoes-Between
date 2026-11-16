@@ -1,4 +1,8 @@
-import { TEST_CONFIG } from '../config/abilityConfig.js';
+
+import {
+    TEST_CONFIG,
+    ABILITY_CONFIG
+} from '../config/abilityConfig.js';
 
 export default class AbilityManager {
 
@@ -16,9 +20,15 @@ export default class AbilityManager {
             temporalEcho: false
 
         };
+
+        this.abilityLevels = {
+            aetherGlide: 1
+        };
+
     }
 
     isUnlocked(abilityName) {
+
         if (
             this.testConfig.enabled &&
             this.testConfig.unlockAllAbilities
@@ -27,6 +37,7 @@ export default class AbilityManager {
         }
 
         return this.unlockedAbilities[abilityName] === true;
+
     }
 
     unlock(abilityName) {
@@ -38,11 +49,13 @@ export default class AbilityManager {
             console.log(`Ability unlocked: ${abilityName}`);
 
             return true;
+
         }
 
         console.warn(`Unknown ability: ${abilityName}`);
 
         return false;
+
     }
 
     lock(abilityName) {
@@ -52,15 +65,135 @@ export default class AbilityManager {
             this.unlockedAbilities[abilityName] = false;
 
             return true;
+
         }
 
         return false;
+
+    }
+
+    getLevel(abilityName) {
+
+        return this.abilityLevels[abilityName] ?? 1;
+
+    }
+
+    setLevel(abilityName, level) {
+
+        if (!(abilityName in this.abilityLevels)) {
+            return false;
+        }
+
+        const maxLevel =
+            ABILITY_CONFIG.aetherGlide.maxLevel;
+
+        if (
+            !Number.isInteger(level) ||
+            level < 1 ||
+            level > maxLevel
+        ) {
+            return false;
+        }
+
+        this.abilityLevels[abilityName] = level;
+
+        console.log(`${abilityName} upgraded to level ${level}`);
+
+        return true;
+
+    }
+
+    upgrade(abilityName) {
+
+        if (!(abilityName in this.abilityLevels)) {
+            return false;
+        }
+
+        const currentLevel = this.getLevel(abilityName);
+
+        const maxLevel =
+            ABILITY_CONFIG.aetherGlide.maxLevel;
+
+        if (currentLevel >= maxLevel) {
+            return false;
+        }
+
+        return this.setLevel(
+            abilityName,
+            currentLevel + 1
+        );
+
     }
 
     getUnlockedAbilities() {
 
         return Object.keys(this.unlockedAbilities)
             .filter(ability => this.isUnlocked(ability));
+
+    }
+
+    getProgress() {
+
+        return {
+
+            unlockedAbilities: {
+                ...this.unlockedAbilities
+            },
+
+            abilityLevels: {
+                ...this.abilityLevels
+            }
+
+        };
+
+    }
+
+    restoreProgress(progress) {
+
+        if (!progress || typeof progress !== 'object') {
+            return false;
+        }
+
+        if (progress.unlockedAbilities) {
+
+            Object.keys(this.unlockedAbilities).forEach(ability => {
+
+                const unlocked =
+                    progress.unlockedAbilities[ability];
+
+                if (typeof unlocked === 'boolean') {
+
+                    this.unlockedAbilities[ability] = unlocked;
+
+                }
+
+            });
+
+        }
+
+        if (progress.abilityLevels) {
+
+            Object.keys(this.abilityLevels).forEach(ability => {
+
+                const level = progress.abilityLevels[ability];
+
+                if (level !== undefined) {
+
+                    this.setLevel(ability, level);
+
+                }
+
+            });
+
+        }
+
+        console.log(
+            'Ability progress restored:',
+            this.getProgress()
+        );
+
+        return true;
+
     }
 
 }
