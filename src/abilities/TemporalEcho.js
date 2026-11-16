@@ -1,3 +1,4 @@
+
 import Phaser from 'phaser';
 import { ABILITY_CONFIG } from '../config/abilityConfig.js';
 
@@ -34,13 +35,14 @@ export default class TemporalEcho {
 
     createEcho() {
 
+        const playerBody = this.player.body;
         const playerObject = this.player.gameObject;
 
         this.gameObject = this.player.scene.add.rectangle(
-            playerObject.x,
-            playerObject.y,
-            playerObject.width,
-            playerObject.height,
+            playerBody.center.x,
+            playerBody.center.y,
+            playerBody.width,
+            playerBody.height,
             0x65cfff,
             0.45
         );

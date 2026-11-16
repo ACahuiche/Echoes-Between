@@ -7,7 +7,7 @@ export default {
 
     playerSpawn: {
         x: 20,
-        y: 210
+        y: 200
     },
 
     dimensions: {

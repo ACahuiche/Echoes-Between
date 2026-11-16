@@ -1,9 +1,13 @@
+
 import Phaser from 'phaser';
 
 import Player from '../entities/Player.js';
 import DimensionManager from '../dimensions/DimensionManager.js';
 import LevelBuilder from '../levels/LevelBuilder.js';
 import LevelComplete from './LevelComplete.js';
+import LevelFailed from './LevelFailed.js';
+
+import wandererSprite from '../assets/sprites/wanderer.png';
 
 import level01 from '../levels/data/level01.js';
 import level02 from '../levels/data/level02.js';
@@ -13,13 +17,27 @@ import level05 from '../levels/data/level05.js';
 import level06 from '../levels/data/level06.js';
 import level07 from '../levels/data/level07.js';
 import level08 from '../levels/data/level08.js';
-import LevelFailed from './LevelFailed.js';
 
 export default class TestScene extends Phaser.Scene {
 
     constructor() {
 
         super('TestScene');
+
+    }
+
+    preload() {
+
+        this.load.spritesheet(
+            'wanderer',
+            wandererSprite,
+            {
+                frameWidth: 32,
+                frameHeight: 32,
+                spacing: 0,
+                margin: 0
+            }
+        );
 
     }
 
@@ -83,7 +101,8 @@ export default class TestScene extends Phaser.Scene {
 
         }
 
-        this.levelStartProgress = this.player.abilityManager.getProgress();
+        this.levelStartProgress =
+            this.player.abilityManager.getProgress();
 
         this.levelBuilder = new LevelBuilder(
             this,
@@ -161,19 +180,23 @@ export default class TestScene extends Phaser.Scene {
 
         }
 
-        const currentDimension = this.dimensionManager.currentDimension;
+        const currentDimension =
+            this.dimensionManager.currentDimension;
 
         this.pressureSwitches?.forEach(pressureSwitch => {
+
             pressureSwitch.update(
                 actors,
                 currentDimension
             );
+
         });
 
         this.level.mechanismManager.update();
     }
 
     completeLevel() {
+
         if (this.isLevelCompleted) return;
 
         this.isLevelCompleted = true;
@@ -216,59 +239,78 @@ export default class TestScene extends Phaser.Scene {
                 isFinalLevel: nextLevel === null
             },
             () => {
+
                 if (!nextLevel) {
                     this.scene.start('MainMenu');
                     return;
                 }
+
                 this.scene.restart({
                     levelId: nextLevel.id,
                     progress: progress
                 });
+
             }
         );
+
     }
 
     failLevel() {
+
         if (this.isLevelCompleted || this.isLevelFailed) return;
-    
+
         this.isLevelFailed = true;
+
         const progress = this.levelStartProgress;
-    
+
         this.player.gameObject.body.enable = false;
-    
+
         this.levelFailedScreen = new LevelFailed(
             this,
             () => {
+
                 this.scene.restart({
                     levelId: this.currentLevelId,
                     progress: progress
                 });
+
             },
             () => {
+
                 this.scene.start('MainMenu');
+
             }
         );
+
     }
 
     createTutorial(levelId) {
+
         if (levelId === 'level01') {
+
             this.showInitialTutorial(
                 'USA LAS FLECHAS HACIA LOS LADOS PARA MOVERTE',
                 'Move'
             );
+
             return;
         }
 
         if (levelId === 'level02') {
+
             this.showInitialTutorial(
                 'PRESIONA SHIFT PARA CAMBIAR ENTRE AETHER Y UMBRA',
                 'Shift'
             );
+
         }
+
     }
 
     showInitialTutorial(message, expectedKey) {
+
         this.removeTutorial();
+
         this.tutorialKey = expectedKey;
 
         this.tutorialText = this.add.text(
@@ -302,9 +344,11 @@ export default class TestScene extends Phaser.Scene {
     }
 
     handleTutorialInput(event) {
+
         if (!this.tutorialText) return;
 
         if (this.tutorialKey === 'Move') {
+
             const moved =
                 event.code === 'ArrowLeft' ||
                 event.code === 'ArrowRight';
@@ -315,26 +359,33 @@ export default class TestScene extends Phaser.Scene {
                 'PRESIONA ESPACIO PARA SALTAR',
                 'Space'
             );
+
             return;
         }
 
         if (this.tutorialKey === 'Space') {
+
             if (event.code !== 'Space') return;
 
             this.removeTutorial();
+
             return;
         }
 
         if (this.tutorialKey === 'Shift') {
+
             if (event.key !== 'Shift') return;
 
             this.removeTutorial();
+
         }
 
     }
 
     showAbilityTutorial(abilityName) {
+
         const tutorials = {
+
             doubleJump: {
                 message: 'PRESIONA ESPACIO EN EL AIRE PARA SALTAR DE NUEVO'
             },
@@ -358,6 +409,7 @@ export default class TestScene extends Phaser.Scene {
             temporalEcho: {
                 message: 'PRESIONA Q PARA CREAR UN ECO QUE ACTIVE INTERRUPTORES'
             }
+
         };
 
         const tutorial = tutorials[abilityName];
@@ -393,6 +445,7 @@ export default class TestScene extends Phaser.Scene {
     }
 
     updateAbilityTutorial() {
+
         if (!this.tutorialAbility) return;
 
         const movementAbilities = this.player.movementAbilities;
@@ -401,7 +454,9 @@ export default class TestScene extends Phaser.Scene {
             this.tutorialAbility === 'doubleJump' &&
             movementAbilities.hasPerformedDoubleJump()
         ) {
+
             this.removeTutorial();
+
             return;
         }
 
@@ -409,12 +464,15 @@ export default class TestScene extends Phaser.Scene {
             this.tutorialAbility === 'wallJump' &&
             movementAbilities.hasPerformedWallJump()
         ) {
+
             this.removeTutorial();
+
         }
 
     }
 
     removeTutorial() {
+
         if (this.tutorialText) {
             this.tutorialText.destroy();
         }
@@ -428,5 +486,7 @@ export default class TestScene extends Phaser.Scene {
             this.handleTutorialInput,
             this
         );
+
     }
+
 }
