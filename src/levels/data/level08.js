@@ -6,8 +6,8 @@ export default {
     name: 'El Último Reflejo',
 
     playerSpawn: {
-        x: 65,
-        y: 210
+        x: 50,
+        y: 200
     },
 
     dimensions: {

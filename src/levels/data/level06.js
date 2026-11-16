@@ -26,7 +26,7 @@ export default {
             id: 'starting_platform',
             type: 'platform',
             x: 20,
-            y: 45,
+            y: 75,
             width: 180,
             height: 16,
             dimension: 'shared'

@@ -1,3 +1,4 @@
+
 import AbilityManager from '../abilities/AbilityManager.js';
 import MovementAbilities from '../abilities/MovementAbilities.js';
 import DimensionalAbilities from '../abilities/DimensionalAbilities.js';
@@ -14,19 +15,26 @@ export default class Player {
         this.acceleration = 1400;
         this.friction = 1800;
         this.jumpForce = -400;
-        this.facing = 1; // Derecha 1 | Izquierda -1
+        this.facing = 1;
 
-        this.gameObject = scene.add.rectangle(
+        this.moveDirection = 0;
+
+        this.gameObject = scene.physics.add.sprite(
             x,
             y,
-            24,
-            32,
-            0x00aaff
+            'wanderer',
+            0
         );
 
-        scene.physics.add.existing(this.gameObject);
+        this.gameObject.setOrigin(0.5, 0.5);
+        this.gameObject.setScale(2);
 
         this.body = this.gameObject.body;
+
+        this.body.setSize(24, 28);
+        this.body.setOffset(4, 4);
+
+        this.createAnimations();
 
         this.body.setCollideWorldBounds(false);
         this.body.setMaxVelocity(this.speed, 1000);
@@ -87,6 +95,11 @@ export default class Player {
             this.movementAbilities.handleJump(
                 this.cursors.space
             );
+
+        } else {
+
+            this.moveDirection = 0;
+
         }
 
         this.aetherGlide.update(
@@ -101,6 +114,31 @@ export default class Player {
         this.dimensionalPulse.update(delta);
 
         this.temporalEcho.handleInput(this.keys.echo);
+
+        this.updateAnimation();
+    }
+
+    createAnimations() {
+
+        if (this.scene.anims.exists('wanderer-walk')) {
+            return;
+        }
+
+        this.scene.anims.create({
+            key: 'wanderer-walk',
+
+            frames: this.scene.anims.generateFrameNumbers(
+                'wanderer',
+                {
+                    start: 0,
+                    end: 3
+                }
+            ),
+
+            frameRate: 8,
+            repeat: -1
+        });
+
     }
 
     handleMovement() {
@@ -108,9 +146,13 @@ export default class Player {
         const body = this.body;
         let direction = 0;
 
-        const movingLeft = this.cursors.left.isDown || this.keys.a.isDown;
+        const movingLeft =
+            this.cursors.left.isDown ||
+            this.keys.a.isDown;
 
-        const movingRight = this.cursors.right.isDown || this.keys.d.isDown;
+        const movingRight =
+            this.cursors.right.isDown ||
+            this.keys.d.isDown;
 
         if (movingLeft && !movingRight) {
             direction = -1;
@@ -119,6 +161,8 @@ export default class Player {
         if (movingRight && !movingLeft) {
             direction = 1;
         }
+
+        this.moveDirection = direction;
 
         if (direction !== 0) {
             this.facing = direction;
@@ -132,6 +176,8 @@ export default class Player {
             body.setAccelerationX(0);
             body.setVelocityX(0);
 
+            this.moveDirection = 0;
+
             return;
         }
 
@@ -140,6 +186,27 @@ export default class Player {
         );
 
         body.setMaxVelocity(this.speed, 1000);
+    }
+
+    updateAnimation() {
+
+        this.gameObject.setFlipX(
+            this.facing === -1
+        );
+
+        if (this.moveDirection !== 0) {
+
+            if (!this.gameObject.anims.isPlaying) {
+                this.gameObject.play('wanderer-walk');
+            }
+
+        } else {
+
+            this.gameObject.anims.stop();
+            this.gameObject.setFrame(0);
+
+        }
+
     }
 
 }
