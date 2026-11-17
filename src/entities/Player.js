@@ -221,27 +221,24 @@ export default class Player {
         this.gameObject.setFlipX(this.facing === -1);
     
         const isOnFloor = this.body.onFloor();
+        const currentAnimation = this.gameObject.anims.currentAnim?.key;
     
         // En el aire
         if (!isOnFloor) {
-    
             if (!this.jumpAnimationStarted) {
                 this.jumpAnimationStarted = true;
                 this.gameObject.play('wanderer-jump-start');
             }
-    
             return;
         }
     
         // Al aterrizar
-        if (this.jumpAnimationStarted) {
-            this.jumpAnimationStarted = false;
-        }
+        this.jumpAnimationStarted = false;
     
         // Caminando
         if (this.moveDirection !== 0) {
     
-            if (this.gameObject.anims.currentAnim?.key !== 'wanderer-walk') {
+            if (currentAnimation !== 'wanderer-walk' || !this.gameObject.anims.isPlaying) {
                 this.gameObject.play('wanderer-walk');
             }
     
@@ -249,7 +246,10 @@ export default class Player {
         }
     
         // Idle
-        this.gameObject.anims.stop();
+        if (this.gameObject.anims.isPlaying) {
+            this.gameObject.anims.stop();
+        }
+    
         this.gameObject.setFrame(0);
     }
 
