@@ -16,6 +16,7 @@ export default class Player {
         this.friction = 1800;
         this.jumpForce = -400;
         this.facing = 1;
+        this.jumpAnimationStarted = false;
 
         this.moveDirection = 0;
 
@@ -35,6 +36,17 @@ export default class Player {
         this.body.setOffset(4, 4);
 
         this.createAnimations();
+
+        this.gameObject.on(
+            'animationcomplete-wanderer-jump-start',
+            () => {
+        
+                if (!this.body.onFloor() && this.jumpAnimationStarted) {
+                    this.gameObject.play('wanderer-jump-loop');
+                }
+        
+            }
+        );
 
         this.body.setCollideWorldBounds(false);
         this.body.setMaxVelocity(this.speed, 1000);
@@ -120,25 +132,41 @@ export default class Player {
 
     createAnimations() {
 
-        if (this.scene.anims.exists('wanderer-walk')) {
-            return;
+        if (!this.scene.anims.exists('wanderer-walk')) {
+            this.scene.anims.create({
+                key: 'wanderer-walk',
+                frames: this.scene.anims.generateFrameNumbers(
+                    'wanderer',
+                    { start: 0, end: 3 }
+                ),
+                frameRate: 8,
+                repeat: -1
+            });
         }
-
-        this.scene.anims.create({
-            key: 'wanderer-walk',
-
-            frames: this.scene.anims.generateFrameNumbers(
-                'wanderer',
-                {
-                    start: 0,
-                    end: 3
-                }
-            ),
-
-            frameRate: 8,
-            repeat: -1
-        });
-
+    
+        if (!this.scene.anims.exists('wanderer-jump-start')) {
+            this.scene.anims.create({
+                key: 'wanderer-jump-start',
+                frames: this.scene.anims.generateFrameNumbers(
+                    'wanderer',
+                    { start: 4, end: 5 }
+                ),
+                frameRate: 8,
+                repeat: 0
+            });
+        }
+    
+        if (!this.scene.anims.exists('wanderer-jump-loop')) {
+            this.scene.anims.create({
+                key: 'wanderer-jump-loop',
+                frames: this.scene.anims.generateFrameNumbers(
+                    'wanderer',
+                    { start: 6, end: 7 }
+                ),
+                frameRate: 8,
+                repeat: -1
+            });
+        }
     }
 
     handleMovement() {
@@ -190,23 +218,39 @@ export default class Player {
 
     updateAnimation() {
 
-        this.gameObject.setFlipX(
-            this.facing === -1
-        );
-
+        this.gameObject.setFlipX(this.facing === -1);
+    
+        const isOnFloor = this.body.onFloor();
+    
+        // En el aire
+        if (!isOnFloor) {
+    
+            if (!this.jumpAnimationStarted) {
+                this.jumpAnimationStarted = true;
+                this.gameObject.play('wanderer-jump-start');
+            }
+    
+            return;
+        }
+    
+        // Al aterrizar
+        if (this.jumpAnimationStarted) {
+            this.jumpAnimationStarted = false;
+        }
+    
+        // Caminando
         if (this.moveDirection !== 0) {
-
-            if (!this.gameObject.anims.isPlaying) {
+    
+            if (this.gameObject.anims.currentAnim?.key !== 'wanderer-walk') {
                 this.gameObject.play('wanderer-walk');
             }
-
-        } else {
-
-            this.gameObject.anims.stop();
-            this.gameObject.setFrame(0);
-
+    
+            return;
         }
-
+    
+        // Idle
+        this.gameObject.anims.stop();
+        this.gameObject.setFrame(0);
     }
 
 }
