@@ -258,6 +258,19 @@ export default class Player {
 
         const isOnFloor = body.onFloor();
 
+        // Dimensional Dash
+        if (movement.isDashing) {
+
+            this.gameObject.setFlipX(
+                this.facing === -1
+            );
+
+            this.gameObject.anims.stop();
+            this.gameObject.setFrame(11);
+
+            return;
+        }
+
         // Wall Grab
         if (movement.isWallGrabbing) {
 
@@ -271,6 +284,19 @@ export default class Player {
 
             this.gameObject.anims.stop();
             this.gameObject.setFrame(8);
+
+            return;
+        }
+
+        // Aether Glide
+        if (this.aetherGlide.isActive) {
+
+            this.gameObject.setFlipX(
+                this.facing === -1
+            );
+
+            this.gameObject.anims.stop();
+            this.gameObject.setFrame(12);
 
             return;
         }
