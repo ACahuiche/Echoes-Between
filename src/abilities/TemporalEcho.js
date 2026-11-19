@@ -14,6 +14,27 @@ export default class TemporalEcho {
 
         this.duration =
             ABILITY_CONFIG.temporalEcho.duration;
+
+        this.createAnimation();
+    }
+
+    createAnimation() {
+
+        const scene = this.player.scene;
+
+        if (scene.anims.exists('wanderer-echo')) {
+            return;
+        }
+
+        scene.anims.create({
+            key: 'wanderer-echo',
+            frames: scene.anims.generateFrameNumbers(
+                'wanderer',
+                { start: 13, end: 15 }
+            ),
+            frameRate: 3,
+            repeat: -1
+        });
     }
 
     handleInput(echoKey) {
@@ -45,11 +66,14 @@ export default class TemporalEcho {
             13
         );
 
-        this.gameObject.setOrigin(0.5, 0.5);
+        this.gameObject.setOrigin(
+            playerObject.originX,
+            playerObject.originY
+        );
 
-        this.gameObject.setDisplaySize(
-            playerBody.width,
-            playerBody.height
+        this.gameObject.setScale(
+            playerObject.scaleX,
+            playerObject.scaleY
         );
 
         this.gameObject.setFlipX(
@@ -61,6 +85,8 @@ export default class TemporalEcho {
         this.gameObject.setDepth(
             playerObject.depth + 1
         );
+
+        this.gameObject.play('wanderer-echo');
 
         this.echoTimer = this.player.scene.time.delayedCall(
             this.duration,
