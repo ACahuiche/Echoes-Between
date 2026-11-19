@@ -38,20 +38,25 @@ export default class TemporalEcho {
         const playerBody = this.player.body;
         const playerObject = this.player.gameObject;
 
-        this.gameObject = this.player.scene.add.rectangle(
+        this.gameObject = this.player.scene.add.sprite(
             playerBody.center.x,
             playerBody.center.y,
-            playerBody.width,
-            playerBody.height,
-            0x65cfff,
-            0.45
+            'wanderer',
+            13
         );
 
-        this.gameObject.setStrokeStyle(
-            2,
-            0x65cfff,
-            0.8
+        this.gameObject.setOrigin(0.5, 0.5);
+
+        this.gameObject.setDisplaySize(
+            playerBody.width,
+            playerBody.height
         );
+
+        this.gameObject.setFlipX(
+            playerObject.flipX
+        );
+
+        this.gameObject.setAlpha(0.45);
 
         this.gameObject.setDepth(
             playerObject.depth + 1
