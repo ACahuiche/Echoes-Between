@@ -28,7 +28,7 @@ export const ABILITY_CONFIG = {
         radius: 96,
         duration: 500,
         lineWidth: 3,
-        color: 0x65f5ff,
+        color: 0xB44AFF,
         alpha: 0.9
     },
 

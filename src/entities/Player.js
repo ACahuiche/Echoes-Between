@@ -40,11 +40,15 @@ export default class Player {
         this.gameObject.on(
             'animationcomplete-wanderer-jump-start',
             () => {
-        
-                if (!this.body.onFloor() && this.jumpAnimationStarted) {
+
+                if (
+                    !this.body.onFloor() &&
+                    this.jumpAnimationStarted &&
+                    !this.movementAbilities.isWallGrabbing &&
+                    !this.movementAbilities.performedWallJump
+                ) {
                     this.gameObject.play('wanderer-jump-loop');
                 }
-        
             }
         );
 
@@ -98,7 +102,9 @@ export default class Player {
             this.keys.shift
         );
 
-        this.movementAbilities.handleDash(this.keys.dash);
+        this.movementAbilities.handleDash(
+            this.keys.dash
+        );
 
         if (!this.movementAbilities.isDashing) {
 
@@ -111,7 +117,6 @@ export default class Player {
         } else {
 
             this.moveDirection = 0;
-
         }
 
         this.aetherGlide.update(
@@ -121,11 +126,15 @@ export default class Player {
             delta
         );
 
-        this.dimensionalPulse.handleInput(this.keys.pulse);
+        this.dimensionalPulse.handleInput(
+            this.keys.pulse
+        );
 
         this.dimensionalPulse.update(delta);
 
-        this.temporalEcho.handleInput(this.keys.echo);
+        this.temporalEcho.handleInput(
+            this.keys.echo
+        );
 
         this.updateAnimation();
     }
@@ -143,7 +152,7 @@ export default class Player {
                 repeat: -1
             });
         }
-    
+
         if (!this.scene.anims.exists('wanderer-jump-start')) {
             this.scene.anims.create({
                 key: 'wanderer-jump-start',
@@ -155,13 +164,36 @@ export default class Player {
                 repeat: 0
             });
         }
-    
+
         if (!this.scene.anims.exists('wanderer-jump-loop')) {
             this.scene.anims.create({
                 key: 'wanderer-jump-loop',
                 frames: this.scene.anims.generateFrameNumbers(
                     'wanderer',
                     { start: 6, end: 7 }
+                ),
+                frameRate: 8,
+                repeat: -1
+            });
+        }
+
+        if (!this.scene.anims.exists('wanderer-wall-grab')) {
+            this.scene.anims.create({
+                key: 'wanderer-wall-grab',
+                frames: [
+                    { key: 'wanderer', frame: 8 }
+                ],
+                frameRate: 1,
+                repeat: 0
+            });
+        }
+
+        if (!this.scene.anims.exists('wanderer-wall-jump')) {
+            this.scene.anims.create({
+                key: 'wanderer-wall-jump',
+                frames: this.scene.anims.generateFrameNumbers(
+                    'wanderer',
+                    { start: 9, end: 10 }
                 ),
                 frameRate: 8,
                 repeat: -1
@@ -218,38 +250,166 @@ export default class Player {
 
     updateAnimation() {
 
-        this.gameObject.setFlipX(this.facing === -1);
-    
-        const isOnFloor = this.body.onFloor();
-        const currentAnimation = this.gameObject.anims.currentAnim?.key;
-    
+        const body = this.body;
+        const movement = this.movementAbilities;
+
+        const currentAnimation =
+            this.gameObject.anims.currentAnim?.key;
+
+        const isOnFloor = body.onFloor();
+
+        // Dimensional Dash
+        if (movement.isDashing) {
+
+            this.gameObject.setFlipX(
+                this.facing === -1
+            );
+
+            this.gameObject.anims.stop();
+            this.gameObject.setFrame(11);
+
+            return;
+        }
+
+        // Wall Grab
+        if (movement.isWallGrabbing) {
+
+            this.facing = movement.wallGrabDirection;
+
+            this.gameObject.setFlipX(
+                this.facing === -1
+            );
+
+            this.jumpAnimationStarted = true;
+
+            this.gameObject.anims.stop();
+            this.gameObject.setFrame(8);
+
+            return;
+        }
+
+        // Aether Glide
+        if (this.aetherGlide.isActive) {
+
+            this.gameObject.setFlipX(
+                this.facing === -1
+            );
+
+            this.gameObject.anims.stop();
+            this.gameObject.setFrame(12);
+
+            return;
+        }
+
         // En el aire
         if (!isOnFloor) {
-            if (!this.jumpAnimationStarted) {
-                this.jumpAnimationStarted = true;
-                this.gameObject.play('wanderer-jump-start');
+
+            // Wall Jump
+            if (movement.performedWallJump) {
+
+                const directionTowardWall =
+                    -movement.wallJumpPushDirection;
+
+                // Wall Jump mirando hacia la pared
+                if (
+                    this.moveDirection === directionTowardWall
+                ) {
+
+                    this.facing = directionTowardWall;
+
+                    this.gameObject.setFlipX(
+                        this.facing === -1
+                    );
+
+                    if (
+                        currentAnimation !== 'wanderer-wall-jump' ||
+                        !this.gameObject.anims.isPlaying
+                    ) {
+                        this.gameObject.play(
+                            'wanderer-wall-jump'
+                        );
+                    }
+
+                    return;
+                }
+
+                // Wall Jump alejándose de la pared
+                this.gameObject.setFlipX(
+                    this.facing === -1
+                );
+
+                if (
+                    currentAnimation !== 'wanderer-jump-loop' ||
+                    !this.gameObject.anims.isPlaying
+                ) {
+                    this.gameObject.play(
+                        'wanderer-jump-loop'
+                    );
+                }
+
+                return;
             }
+
+            // Salto normal: preparación
+            if (!this.jumpAnimationStarted) {
+
+                this.jumpAnimationStarted = true;
+
+                this.gameObject.setFlipX(
+                    this.facing === -1
+                );
+
+                this.gameObject.play(
+                    'wanderer-jump-start'
+                );
+
+                return;
+            }
+
+            // Salto normal: caída
+            if (
+                currentAnimation !== 'wanderer-jump-start' &&
+                (
+                    currentAnimation !== 'wanderer-jump-loop' ||
+                    !this.gameObject.anims.isPlaying
+                )
+            ) {
+                this.gameObject.play(
+                    'wanderer-jump-loop'
+                );
+            }
+
+            this.gameObject.setFlipX(
+                this.facing === -1
+            );
+
             return;
         }
-    
+
         // Al aterrizar
         this.jumpAnimationStarted = false;
-    
+
+        this.gameObject.setFlipX(
+            this.facing === -1
+        );
+
         // Caminando
         if (this.moveDirection !== 0) {
-    
-            if (currentAnimation !== 'wanderer-walk' || !this.gameObject.anims.isPlaying) {
-                this.gameObject.play('wanderer-walk');
+
+            if (
+                currentAnimation !== 'wanderer-walk' ||
+                !this.gameObject.anims.isPlaying
+            ) {
+                this.gameObject.play(
+                    'wanderer-walk'
+                );
             }
-    
+
             return;
         }
-    
+
         // Idle
-        if (this.gameObject.anims.isPlaying) {
-            this.gameObject.anims.stop();
-        }
-    
+        this.gameObject.anims.stop();
         this.gameObject.setFrame(0);
     }
 
