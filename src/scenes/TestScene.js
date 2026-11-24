@@ -8,6 +8,7 @@ import LevelComplete from './LevelComplete.js';
 import LevelFailed from './LevelFailed.js';
 
 import wandererSprite from '../assets/sprites/wanderer.png';
+import portalSprite from '../assets/sprites/portal.png';
 
 import level01 from '../levels/data/level01.js';
 import level02 from '../levels/data/level02.js';
@@ -34,6 +35,17 @@ export default class TestScene extends Phaser.Scene {
             {
                 frameWidth: 32,
                 frameHeight: 32,
+                spacing: 0,
+                margin: 0
+            }
+        );
+
+        this.load.spritesheet(
+            'portal',
+            portalSprite,
+            {
+                frameWidth: 32,
+                frameHeight: 64,
                 spacing: 0,
                 margin: 0
             }

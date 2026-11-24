@@ -9,18 +9,37 @@ export default class Goal {
         this.player = player;
         this.reached = false;
 
-        const width = options.width ?? 12;
-        const height = options.height ?? 40;
-        const color = options.color ?? 0xffc857;
+        const scale = options.scale ?? 2;
 
-        this.gameObject = scene.add.rectangle(
-            x, y, width, height, color
+        const width = options.width ?? 28;
+        const height = options.height ?? 60;
+
+        this.gameObject = scene.add.sprite(
+            x,
+            y,
+            'portal',
+            0
         );
 
-        this.gameObject.setStrokeStyle(2, 0xffedaa);
+        this.gameObject.setOrigin(0.5, 0.5);
+        this.gameObject.setScale(scale);
+        this.gameObject.setAngle(options.rotation ?? 0);
         this.gameObject.setDepth(5);
 
-        scene.physics.add.existing(this.gameObject, true);
+        this.createAnimation();
+
+        this.gameObject.play('portal-idle');
+
+        scene.physics.add.existing(
+            this.gameObject,
+            true
+        );
+
+        this.gameObject.body.setSize(
+            width,
+            height,
+            true
+        );
 
         scene.physics.add.overlap(
             player.gameObject,
@@ -31,15 +50,41 @@ export default class Goal {
         );
     }
 
+    createAnimation() {
+
+        if (this.scene.anims.exists('portal-idle')) {
+            return;
+        }
+
+        this.scene.anims.create({
+            key: 'portal-idle',
+            frames: this.scene.anims.generateFrameNumbers(
+                'portal',
+                { start: 0, end: 3 }
+            ),
+            frameRate: 5,
+            repeat: -1
+        });
+    }
+
     handleOverlap() {
-        if (this.reached) return;
+
+        if (this.reached) {
+            return;
+        }
 
         this.reached = true;
-        this.gameObject.setFillStyle(0xffffff);
+
+        this.gameObject.setTint(0xffffff);
+
         this.scene.events.emit('goal-reached');
     }
 
     destroy() {
-        this.gameObject.destroy();
+
+        if (this.gameObject) {
+            this.gameObject.destroy();
+        }
     }
+
 }

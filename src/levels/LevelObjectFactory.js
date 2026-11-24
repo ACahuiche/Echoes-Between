@@ -1,7 +1,9 @@
+
 import DimensionalBarrier from '../objects/DimensionalBarrier.js';
 import PulseSwitch from '../objects/PulseSwitch.js';
 import PressureSwitch from '../objects/PressureSwitch.js';
 import AbilityPickup from '../objects/AbilityPickup.js';
+import Goal from '../objects/Goal.js';
 
 export default class LevelObjectFactory {
 
@@ -24,7 +26,22 @@ export default class LevelObjectFactory {
             case 'platform':
             case 'wall':
 
-                createdObject = this.createSolid(objectData, dimension);
+                createdObject = this.createSolid(
+                    objectData,
+                    dimension
+                );
+
+                break;
+
+            case 'goal':
+
+                createdObject = new Goal(
+                    this.scene,
+                    this.player,
+                    objectData.x,
+                    objectData.y,
+                    objectData.options
+                );
 
                 break;
 

@@ -57,12 +57,12 @@ export default {
     goal: {
 
         x: 430,
-        y: 197,
+        y: 200,
 
         options: {
-            width: 12,
-            height: 40,
-            color: 0xffc857
+            width: 60,
+            height: 110,
+            scale: 2,
         }
 
     },

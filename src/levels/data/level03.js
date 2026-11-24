@@ -66,7 +66,7 @@ export default {
             id: 'final_platform',
             type: 'platform',
             x: 425,
-            y: 95,
+            y: 140,
             width: 70,
             height: 12,
             dimension: 'shared'
@@ -75,13 +75,13 @@ export default {
 
     goal: {
 
-        x: 440,
+        x: 425,
         y: 70,
 
         options: {
-            width: 12,
-            height: 30,
-            color: 0xffc857
+            width: 60,
+            height: 110,
+            scale: 2,
         }
 
     },
