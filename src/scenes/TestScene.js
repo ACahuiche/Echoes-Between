@@ -9,6 +9,7 @@ import LevelFailed from './LevelFailed.js';
 
 import wandererSprite from '../assets/sprites/wanderer.png';
 import portalSprite from '../assets/sprites/portal.png';
+import abilitiesSprite from '../assets/sprites/habilidades.png';
 
 import level01 from '../levels/data/level01.js';
 import level02 from '../levels/data/level02.js';
@@ -51,9 +52,22 @@ export default class TestScene extends Phaser.Scene {
             }
         );
 
+        this.load.spritesheet(
+            'abilities',
+            abilitiesSprite,
+            {
+                frameWidth: 13,
+                frameHeight: 17,
+                spacing: 0,
+                margin: 0
+            }
+        );
+
     }
 
     create(data = {}) {
+
+        this.createAbilityAnimations();
 
         this.physics.world.setBounds(
             0,
@@ -168,6 +182,64 @@ export default class TestScene extends Phaser.Scene {
 
     }
 
+    createAbilityAnimations() {
+
+        const animations = [
+            {
+                key: 'pickup-doubleJump',
+                start: 0,
+                end: 3
+            },
+            {
+                key: 'pickup-wallJump',
+                start: 4,
+                end: 7
+            },
+            {
+                key: 'pickup-dimensionalDash',
+                start: 8,
+                end: 11
+            },
+            {
+                key: 'pickup-aetherGlide',
+                start: 12,
+                end: 15
+            },
+            {
+                key: 'pickup-dimensionalPulse',
+                start: 16,
+                end: 19
+            },
+            {
+                key: 'pickup-temporalEcho',
+                start: 20,
+                end: 23
+            }
+        ];
+
+        animations.forEach(animation => {
+
+            if (this.anims.exists(animation.key)) {
+                return;
+            }
+
+            this.anims.create({
+                key: animation.key,
+                frames: this.anims.generateFrameNumbers(
+                    'abilities',
+                    {
+                        start: animation.start,
+                        end: animation.end
+                    }
+                ),
+                frameRate: 6,
+                repeat: -1
+            });
+
+        });
+
+    }
+
     update(time, delta) {
 
         if (this.isLevelCompleted || this.isLevelFailed) return;
@@ -175,8 +247,11 @@ export default class TestScene extends Phaser.Scene {
         this.player.update(delta);
 
         if (this.player.gameObject.body.bottom > this.scale.height + 8) {
+
             this.failLevel();
+
             return;
+
         }
 
         this.updateAbilityTutorial();
@@ -186,6 +261,7 @@ export default class TestScene extends Phaser.Scene {
         ];
 
         if (this.player.temporalEcho.gameObject) {
+
             actors.push(
                 this.player.temporalEcho.gameObject
             );
@@ -205,6 +281,7 @@ export default class TestScene extends Phaser.Scene {
         });
 
         this.level.mechanismManager.update();
+
     }
 
     completeLevel() {
@@ -253,8 +330,11 @@ export default class TestScene extends Phaser.Scene {
             () => {
 
                 if (!nextLevel) {
+
                     this.scene.start('MainMenu');
+
                     return;
+
                 }
 
                 this.scene.restart({
@@ -306,6 +386,7 @@ export default class TestScene extends Phaser.Scene {
             );
 
             return;
+
         }
 
         if (levelId === 'level02') {
@@ -373,6 +454,7 @@ export default class TestScene extends Phaser.Scene {
             );
 
             return;
+
         }
 
         if (this.tutorialKey === 'Space') {
@@ -382,6 +464,7 @@ export default class TestScene extends Phaser.Scene {
             this.removeTutorial();
 
             return;
+
         }
 
         if (this.tutorialKey === 'Shift') {
@@ -470,6 +553,7 @@ export default class TestScene extends Phaser.Scene {
             this.removeTutorial();
 
             return;
+
         }
 
         if (
@@ -486,7 +570,9 @@ export default class TestScene extends Phaser.Scene {
     removeTutorial() {
 
         if (this.tutorialText) {
+
             this.tutorialText.destroy();
+
         }
 
         this.tutorialText = null;
