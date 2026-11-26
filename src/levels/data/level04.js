@@ -36,12 +36,12 @@ export default {
             type: 'abilityPickup',
             ability: 'wallJump',
             x: 200,
-            y: 220,
+            y: 210,
             dimension: 'shared',
             options: {
                 width: 16,
                 height: 20,
-                color: 0xffc857
+                scale: 2
             }
         },
         {

@@ -69,7 +69,7 @@ export default {
             options: {
                 width: 16,
                 height: 20,
-                color: 0xffc857
+                scale: 2
             }
         },
         {

@@ -10,22 +10,52 @@ export default class AbilityPickup {
 
         this.dimension = options.dimension ?? 'shared';
 
-        const width = options.width ?? 16;
-        const height = options.height ?? 20;
-        const color = options.color ?? 0xffc857;
+        const scale = options.scale ?? 1;
 
-        this.gameObject = scene.add.rectangle(
+        const animations = {
+            doubleJump: 'pickup-doubleJump',
+            wallJump: 'pickup-wallJump',
+            dimensionalDash: 'pickup-dimensionalDash',
+            aetherGlide: 'pickup-aetherGlide',
+            dimensionalPulse: 'pickup-dimensionalPulse',
+            temporalEcho: 'pickup-temporalEcho'
+        };
+
+        const animationKey = animations[abilityName];
+
+        if (!animationKey) {
+
+            throw new Error(
+                `Unknown ability pickup: ${abilityName}`
+            );
+
+        }
+
+        this.gameObject = scene.add.sprite(
             x,
             y,
-            width,
-            height,
-            color
+            'abilities',
+            0
         );
 
-        this.gameObject.setStrokeStyle(2, 0xffedaa);
+        this.gameObject.setScale(scale);
         this.gameObject.setDepth(5);
 
-        scene.physics.add.existing(this.gameObject, true);
+        this.gameObject.play(animationKey);
+
+        scene.physics.add.existing(
+            this.gameObject,
+            true
+        );
+
+        const width = options.width ?? this.gameObject.width;
+        const height = options.height ?? this.gameObject.height;
+
+        this.gameObject.body.setSize(
+            width,
+            height,
+            true
+        );
 
         scene.dimensionManager.register(
             this.gameObject,
@@ -42,6 +72,7 @@ export default class AbilityPickup {
     }
 
     collect() {
+
         if (this.collected) return;
 
         const abilityManager = this.player.abilityManager;
@@ -66,6 +97,10 @@ export default class AbilityPickup {
     }
 
     destroy() {
-        this.gameObject.destroy();
+
+        if (this.gameObject) {
+            this.gameObject.destroy();
+        }
     }
+
 }
